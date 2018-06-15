@@ -32,10 +32,14 @@ export default {
 .nav {
   flex-shrink: 0;
   width: 100%;
+  position: relative;
+  z-index: 1;
 }
 .content {
    flex-grow: 1;
    width: 100%;
    overflow: auto;
+   position: relative;
+   z-index: 2;
 }
 </style>

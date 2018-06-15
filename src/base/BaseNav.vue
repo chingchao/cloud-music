@@ -2,22 +2,26 @@
     <mu-appbar class='bg-theme' textColor='#fff' :zDepth=zDepth>
         <template slot='left'>
             <div>
-                <mu-icon class='icon active' size="30" value="sort"></mu-icon>
+                <i class='icon-caidan iconfont active'></i>
             </div>
         </template>
         <template slot='default'>
-            <mu-flex align-items="center" justify-content="center" style="">
+            <mu-flex class='nav-item' align-items="center" justify-content="center">
                 <router-link to='/'>
-                    <mu-icon class='icon center-icon active' size='30' value='audiotrack'></mu-icon>
+                    <i class="iconfont icon-yinyue i-nav"></i>
                 </router-link>
-                <router-link to='/playlist'>
-                    <mu-icon class='icon center-icon' size='30' value='audiotrack'></mu-icon>
+                <router-link to='/recommend'>
+                    <i class="iconfont icon-yinle-yuanshijituantubiao i-nav active"></i>
                 </router-link>
-                <mu-icon class='icon center-icon' size='30' value='audiotrack'></mu-icon>
+                <router-link to='/recommend'>
+                    <i class="iconfont icon-shipin i-nav"></i>
+                </router-link>
             </mu-flex>
         </template>
         <template slot='right'>
-            <mu-icon class='icon active' size='30' value='brightness_1'></mu-icon>
+            <router-link to='/recommend'>
+                <i class="iconfont icon-sousuo active"></i>
+            </router-link>
         </template>
     </mu-appbar>
 </template>
@@ -31,9 +35,16 @@ export default {
   }
 }
 </script>
-<style lang='less'>
-    .icon {
-        color: #d9d9d9;
+<style lang='less' scoped>
+    .iconfont {
+        color: #d0d0d0;
+        font-size: 30px;
+    }
+    .nav-item {
+        line-height: 1;
+    }
+    .i-nav {
+        padding: 0 16px;
     }
     .active {
         color: #fff;
