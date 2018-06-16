@@ -8,7 +8,7 @@
       </template>
       <template slot='default'>
           <mu-flex class='nav-item' align-items="center" justify-content="start">
-             <h1 class="title">{{title}}</h1>
+             <h1 class="title ell">{{title}}</h1>
           </mu-flex>
       </template>
     </mu-appbar>
@@ -31,8 +31,5 @@ export default {
   }
   .title {
     max-width: 100%;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
   }
 </style>

@@ -1,7 +1,7 @@
 <template>
   <div class='music-item flex'>
     <span class='order color-gray'>{{index}}</span>
-    <div class='flex-grow flex border-b info'>
+    <div class='flex-grow flex info border-b'>
       <div class='flex-grow'>
         <p class='name'>{{item.name}}</p>
         <span class='singer color-gray'>{{item.singers}} - {{item.al_name}}</span>
@@ -26,6 +26,7 @@ export default {
     width: 3em;
     font-size: 18px;
     text-align: center;
+    flex-shrink: 0;
   }
   .iconfont {
     font-size: 20px;

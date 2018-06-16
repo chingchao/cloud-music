@@ -38,7 +38,7 @@ export default {
 <style lang='less' scoped>
     .iconfont {
         color: #d0d0d0;
-        font-size: 30px;
+        font-size: 28px;
     }
     .nav-item {
         line-height: 1;

@@ -2,11 +2,13 @@
   <transition name='slide'>
     <div class='music-list'>
       <Title class='title' :title='title'/>
-      <ul class='list'>
-        <li v-for='(item, index) in list' :key='item.id'>
-          <music-item :index='index' :item='item'></music-item>
-        </li>
-      </ul>
+      <scroll ref="scroll" class='list-content' :data='list'>
+        <ul class='list'>
+          <li v-for='(item, index) in list' :key='item.id'>
+            <music-item :index='index' :item='item'></music-item>
+          </li>
+        </ul>
+      </scroll>
     </div>
   </transition>
 </template>
@@ -14,6 +16,7 @@
 import {getRecommendDetail} from '@/api/recommend'
 import MusicItem from '@/components/MusicItem'
 import Title from '@/base/Title'
+import Scroll from '@/base/Scroll'
 
 export default {
   name: 'MusicList',
@@ -26,7 +29,8 @@ export default {
   },
   components: {
     MusicItem,
-    Title
+    Title,
+    Scroll
   },
   created () {
     this._getRecommendDetail()
@@ -64,13 +68,14 @@ export default {
       width: 100%;
       z-index: 2;
     }
-    .list {
+    .list-content {
+      overflow: hidden;
       position: absolute;
       top: 56px;
+      bottom: 0;
       width: 100%;
     }
   }
-
   .slide-enter-active, .slide-leave-active {
     transition: all 0.3s;
   }
