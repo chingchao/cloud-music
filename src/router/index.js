@@ -3,6 +3,7 @@ import Router from 'vue-router'
 // import HelloWorld from '@/components/HelloWorld'
 import Recommend from '@/components/Recommend'
 import MusicList from '@/components/MusicList'
+import Rank from '@/components/Rank'
 // import BaseNav from '@/base/BaseNav'
 
 Vue.use(Router)
@@ -19,6 +20,10 @@ export default new Router({
       children: [{
         path: ':id',
         component: MusicList
+      }, {
+        path: '/rank',
+        name: 'rank',
+        component: Rank
       }]
     }
   ]

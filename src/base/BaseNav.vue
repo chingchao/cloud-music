@@ -7,13 +7,13 @@
         </template>
         <template slot='default'>
             <mu-flex class='nav-item' align-items="center" justify-content="center">
-                <router-link to='/'>
+                <router-link to='/home'>
                     <i class="iconfont icon-yinyue i-nav"></i>
                 </router-link>
                 <router-link to='/recommend'>
-                    <i class="iconfont icon-yinle-yuanshijituantubiao i-nav active"></i>
+                    <i class="iconfont icon-yinle-yuanshijituantubiao i-nav"></i>
                 </router-link>
-                <router-link to='/recommend'>
+                <router-link to='/vdeio'>
                     <i class="iconfont icon-shipin i-nav"></i>
                 </router-link>
             </mu-flex>
@@ -46,7 +46,7 @@ export default {
     .i-nav {
         padding: 0 16px;
     }
-    .active {
+    .router-link-active .iconfont, .active {
         color: #fff;
     }
     .center-icon {

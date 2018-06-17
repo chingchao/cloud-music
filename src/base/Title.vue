@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="title-container">
     <mu-appbar class='bg-theme' textColor='#fff' :zDepth="0">
       <template slot='left'>
           <div class="back" @click="back">
@@ -25,7 +25,13 @@ export default {
   }
 }
 </script>
-<style>
+<style scoped>
+  .title-container {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 2;
+  }
   .title-wrap {
     padding-left: 0;
   }

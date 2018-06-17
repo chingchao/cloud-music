@@ -138,7 +138,7 @@ export default {
 </script>
 <style lang='less' scoped>
   .dots {
-    bottom: 10px;
+    bottom: 6px;
     left: 0;
     justify-content: center;
     .dot {

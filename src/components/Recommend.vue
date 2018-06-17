@@ -1,46 +1,56 @@
 <template>
   <div class='recommend'>
+    <!-- scroll 传入data参数，组件内部会监听 data 的数据变化，执行 refresh（）方法 -->
     <scroll ref="scroll" class="recommend-content" :data="recommend">
       <div>
         <div class='banner' v-if='banner.length'>
           <slider>
-            <div v-for='(item, index) in banner' :key='item.targetId + item.targetType + index'>
+            <div class="banner-item"
+              v-for='(item, index) in banner'
+              :key='item.targetId + item.targetType + index'
+            >
               <a :href="item.url">
-                <img :src="item.picUrl" alt="">
+                <!-- img 标签用 load 事件，当第一张图片被加载后，父级高度被撑开，需要重新调用 scroll 组件的 refresh 方法，避免出现图片加载较慢时 scroll 组件计算高度不准的问题 -->
+                <img @load="loadImage" :src="item.picUrl" alt="">
               </a>
             </div>
           </slider>
         </div>
-        <ul class='menu-list flex border-b'>
+        <ul class='menu-list flex border-b' v-show='banner.length'>
           <li class='flex flex-column' v-for="(item, index) in menuList" :key="index">
-            <div class='icon-wrap color-theme border-theme flex'>
-              <i class='iconfont' :class="item.icon"></i>
-            </div>
-            <p class='name'>{{item.name}}</p>
+            <router-link class="flex flex-column" :to="item.link">
+              <div class='icon-wrap color-theme border-theme flex'>
+                <i class='iconfont' :class="item.icon"></i>
+              </div>
+              <p class='name'>{{item.name}}</p>
+            </router-link>
           </li>
         </ul>
-        <p class='dis-name'>
-          {{disName}}
-        </p>
-        <ul>
-          <li class='recommend-i flex' v-for="item in recommend" :key="item.id" @click="getDetail(item.id)">
-            <div class="img-wrap pr">
-              <img class='item-img h100p pa' :src="item.img" alt="">
-              <p class='pa play-count'>
-                <i class='iconfont icon-headseterji'></i>
-                <span>{{count(item.playCount)}}</span>
-              </p>
-            </div>
-            <div class='info flex'>
-              <p class='title'>{{item.name}}</p>
-              <p class='creator'>by {{item.creator}}</p>
-              <p>
-                <span class='color-theme border-theme tag'>{{item.tag}}</span>
-                <span class='des'>{{item.des}}</span>
-              </p>
-            </div>
-          </li>
-        </ul>
+        <div v-show="recommend.length">
+          <type-title title="精品歌单"/>
+          <ul>
+            <li class='recommend-i flex' v-for="item in recommend" :key="item.id" @click="getDetail(item.id)">
+              <div class="img-wrap pr">
+                <img class='item-img h100p pa' v-lazy="item.img" alt="">
+                <p class='pa play-count'>
+                  <i class='iconfont icon-headseterji'></i>
+                  <span>{{count(item.playCount)}}</span>
+                </p>
+              </div>
+              <div class='info flex'>
+                <p class='title'>{{item.name}}</p>
+                <p class='creator'>by {{item.creator}}</p>
+                <p>
+                  <span class='color-theme border-theme tag'>{{item.tag}}</span>
+                  <span class='des'>{{item.des}}</span>
+                </p>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="loading-container pa" v-show='!recommend.length'>
+        <loading/>
       </div>
     </scroll>
     <router-view></router-view>
@@ -50,6 +60,8 @@
 import {getRecommend, getBanner} from '@/api/recommend'
 import Scroll from '@/base/Scroll'
 import Slider from '@/base/Slider'
+import Loading from '@/base/Loading'
+import TypeTitle from '@/base/TypeTitle'
 
 export default {
   name: 'Recommend',
@@ -60,22 +72,28 @@ export default {
       disName: '',
       menuList: [{
         icon: 'icon-diantai',
-        name: '私人FM'
+        name: '私人FM',
+        link: '/rank'
       }, {
         icon: 'icon-04',
-        name: '每日推荐'
+        name: '每日推荐',
+        link: '/rank'
       }, {
         icon: 'icon-liebiao',
-        name: '歌单'
+        name: '歌单',
+        link: '/rank'
       }, {
         icon: 'icon-paixingbang',
-        name: '排行榜'
+        name: '排行榜',
+        link: '/rank'
       }]
     }
   },
   components: {
     Scroll,
-    Slider
+    Slider,
+    Loading,
+    TypeTitle
   },
   created () {
     this._getBanner()
@@ -114,6 +132,13 @@ export default {
     },
     count: function (playCount) {
       return playCount > 10000 ? Math.floor(playCount / 10000) + '万' : playCount
+    },
+    // 当有一张图片加载，重新调用 scroll 组件的 refresh 方法，重新计算滚动高度
+    loadImage () {
+      if (!this.checkLoad) {
+        this.$refs.scroll.refresh()
+        this.checkLoad = true
+      }
     }
   }
 }
@@ -133,10 +158,6 @@ export default {
     width: 90px;
     margin-right: 10px;
     flex-shrink: 0;
-  }
-  .dis-name {
-    font-weight: 600;
-    padding: 16px 0 6px 10px;
   }
   .recommend-i {
     height: 90px;
@@ -180,6 +201,10 @@ export default {
       width: 100%;
     }
   }
+  .banner-item {
+    height: 170px;
+    overflow: hidden;
+  }
 
   .menu-list {
     padding: 20px 0;
@@ -193,7 +218,12 @@ export default {
       justify-content: center;
     }
     .name {
-      padding: 10px 0;
+      padding: 10px 0 0;
     }
+  }
+
+  .loading-container {
+    top: 50%;
+    width: 100%;
   }
 </style>

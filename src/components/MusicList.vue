@@ -1,22 +1,27 @@
 <template>
   <transition name='slide'>
-    <div class='music-list'>
-      <Title class='title' :title='title'/>
+    <child-wrap>
+      <Title :title='title'/>
       <scroll ref="scroll" class='list-content' :data='list'>
-        <ul class='list'>
+        <ul class='list' v-if="list.length">
           <li v-for='(item, index) in list' :key='item.id'>
             <music-item :index='index' :item='item'></music-item>
           </li>
         </ul>
+        <div class="loading-container pa" v-show='!list.length'>
+          <loading/>
+        </div>
       </scroll>
-    </div>
+    </child-wrap>
   </transition>
 </template>
 <script>
 import {getRecommendDetail} from '@/api/recommend'
+import ChildWrap from '@/base/ChildWrap'
 import MusicItem from '@/components/MusicItem'
 import Title from '@/base/Title'
 import Scroll from '@/base/Scroll'
+import Loading from '@/base/Loading'
 
 export default {
   name: 'MusicList',
@@ -29,8 +34,10 @@ export default {
   },
   components: {
     MusicItem,
+    ChildWrap,
     Title,
-    Scroll
+    Scroll,
+    Loading
   },
   created () {
     this._getRecommendDetail()
@@ -54,27 +61,16 @@ export default {
 }
 </script>
 <style lang='less' scoped>
-  .music-list {
-    position: fixed;
-    top: 0;
+  .list-content {
+    overflow: hidden;
+    position: absolute;
+    top: 56px;
     bottom: 0;
-    left: 0;
-    right: 0;
-    background: #fff;
-    overflow: auto;
-    .title {
-      position: fixed;
-      top: 0;
-      width: 100%;
-      z-index: 2;
-    }
-    .list-content {
-      overflow: hidden;
-      position: absolute;
-      top: 56px;
-      bottom: 0;
-      width: 100%;
-    }
+    width: 100%;
+  }
+  .loading-container {
+    top: 50%;
+    width: 100%;
   }
   .slide-enter-active, .slide-leave-active {
     transition: all 0.3s;
