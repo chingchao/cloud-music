@@ -58,15 +58,13 @@ export default {
   },
   methods: {
     onShoutcutTouchStart (e) {
-      let index = getData(e.target, 'index')
-      if (!index) return
+      let index = parseInt(getData(e.target, 'index'))
       let firstTouch = e.touches[0]
       this.touch.y1 = firstTouch.pageY
       this.touch.index = index
       this._scrollTo(index)
     },
     onShoutcutTouchMove (e) {
-      if (!this.touch.index) return
       let firstTouch = e.touches[0]
       this.touch.y2 = firstTouch.pageY
       // 增量
@@ -75,7 +73,15 @@ export default {
       this._scrollTo(index)
     },
     _scrollTo (index) {
-      this.currentIndex = parseInt(index)
+      if (!index && index !== 0) {
+        return
+      }
+      if (index < 0) {
+        index = 0
+      } else {
+        
+      }
+      this.currentIndex = index
       // scrollToElement 方法的第二个参数表示滚动动画时间
       this.$refs.singerList.scrollToElement(this.$refs.singerGroup[index], 0)
     }
