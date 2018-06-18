@@ -2,10 +2,11 @@
   <transition name="singer">
     <child-wrap>
       <Title title="歌手"/>
-      <singer-list class="singer-wrap" :v-if="singers.length" :singers="singers"></singer-list>
+      <singer-list class="singer-wrap" :v-if="singers.length" :singers="singers" @select="selectSinger"></singer-list>
       <div class="loading-container pa" v-show="!singers.length">
         <loading/>
       </div>
+      <router-view></router-view>
     </child-wrap>
   </transition>
 </template>
@@ -16,6 +17,7 @@ import ChildWrap from '@/base/ChildWrap'
 import Title from '@/base/Title'
 import Loading from '@/base/Loading'
 import pinyin from 'pinyin'
+import {mapMutations} from 'vuex'
 
 const HOT_NAME = '热门'
 const HOT_LEN = 10
@@ -37,6 +39,12 @@ export default {
     this._getSinger()
   },
   methods: {
+    selectSinger (singer) {
+      this.$router.push({
+        path: `/singer/${singer.id}`
+      })
+      this.setSinger(singer)
+    },
     _getSinger () {
       getSinger().then(res => {
         this.singers = this._normalizeSinger(res.data.artists)
@@ -87,7 +95,10 @@ export default {
         picUrl: item.picUrl,
         id: item.id
       }
-    }
+    },
+    ...mapMutations({
+      setSinger: 'SET_SINGER'
+    })
   }
 }
 </script>

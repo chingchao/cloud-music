@@ -9,7 +9,7 @@
     <ul class="singer-ul">
       <li class="singer-group" v-for="group in singers" :key="group.title" ref="singerGroup">
         <p class="title bg-gray">{{group.title}}</p>
-        <div class="info flex" v-for="v in group.item" :key="v.id">
+        <div class="info flex" v-for="v in group.item" :key="v.id" @click="selectItem(v)">
           <img class="img" v-lazy="v.picUrl" :alt="v.name">
           <span class="name">{{v.name}}</span>
         </div>
@@ -110,13 +110,15 @@ export default {
     diff (newVal) {
       // fixedTop 是 .fixed-title 在 y 轴上的偏移
       let fixedTop = (newVal > 0 && newVal < TITLE_HEIGHT) ? newVal - TITLE_HEIGHT : 0
-      console.log(fixedTop)
       if (this.fixedTop === fixedTop) return
       this.fixedTop = fixedTop
       this.$refs.fixedTitle.style.transform = `translate3d(0, ${this.fixedTop}px, 0)`
     }
   },
   methods: {
+    selectItem (singer) {
+      this.$emit('select', singer)
+    },
     onShoutcutTouchStart (e) {
       let index = parseInt(getData(e.target, 'index'))
       let firstTouch = e.touches[0]

@@ -9,3 +9,8 @@ export function getSinger () {
 }
 
 // 获取歌手详情
+export function getSingerDetail (id) {
+  return axios.get(url + '/artists?id=' + id, {}).then(res => {
+    return Promise.resolve(res)
+  })
+}

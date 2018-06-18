@@ -5,6 +5,7 @@ import Recommend from '@/components/Recommend'
 import MusicList from '@/components/MusicList'
 import Rank from '@/components/Rank'
 import Singer from '@/components/Singer'
+import SingerDetail from '@/components/SingerDetail'
 // import BaseNav from '@/base/BaseNav'
 
 Vue.use(Router)
@@ -28,7 +29,11 @@ export default new Router({
       }, {
         path: '/singer',
         name: 'singer',
-        component: Singer
+        component: Singer,
+        children: [{
+          path: ':id',
+          component: SingerDetail
+        }]
       }]
     }
   ]

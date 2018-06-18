@@ -24,6 +24,7 @@ import MusicItem from '@/components/MusicItem'
 import Title from '@/base/Title'
 import Scroll from '@/base/Scroll'
 import Loading from '@/base/Loading'
+import Song from '@/common/js/song'
 
 export default {
   name: 'MusicList',
@@ -49,12 +50,7 @@ export default {
       getRecommendDetail(this.$route.params.id).then(res => {
         console.log(res)
         this.list = res.data.playlist.tracks.map(item => {
-          return {
-            name: item.name,
-            id: item.aid,
-            al_name: item.al.name,
-            singers: item.ar.map(item => item.name).join('/')
-          }
+          return new Song(item)
         })
         this.title = res.data.playlist.name
       })
