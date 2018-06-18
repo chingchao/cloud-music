@@ -9,7 +9,7 @@ import BScroll from 'better-scroll'
 
 export default {
   props: {
-    // 欢动超过一定时间后派发 scroll 事件
+    // 滑动超过一定时间后派发 scroll 事件
     probeType: {
       type: Number,
       default: 1

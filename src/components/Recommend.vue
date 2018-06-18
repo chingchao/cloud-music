@@ -73,7 +73,7 @@ export default {
       menuList: [{
         icon: 'icon-diantai',
         name: '私人FM',
-        link: '/rank'
+        link: '/singer'
       }, {
         icon: 'icon-04',
         name: '每日推荐',

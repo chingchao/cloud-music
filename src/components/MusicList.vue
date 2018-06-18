@@ -3,11 +3,13 @@
     <child-wrap>
       <Title :title='title'/>
       <scroll ref="scroll" class='list-content' :data='list'>
-        <ul class='list' v-if="list.length">
-          <li v-for='(item, index) in list' :key='item.id'>
-            <music-item :index='index' :item='item'></music-item>
-          </li>
-        </ul>
+        <div>
+          <ul class='list' v-if="list.length">
+            <li v-for='(item, index) in list' :key='item.id'>
+              <music-item :index='index' :item='item'></music-item>
+            </li>
+          </ul>
+        </div>
         <div class="loading-container pa" v-show='!list.length'>
           <loading/>
         </div>
