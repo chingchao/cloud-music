@@ -11,7 +11,7 @@
                 <!-- <router-link class="flex brank-item" to> -->
                   <img class="brank-img" v-lazy="item.coverImgUrl" alt="">
                   <div class="flex flex-column song-list ell">
-                    <p class="ell w100p" v-for="(v, i) in item.rankSongList" :key="v.id">{{i}}. {{v.name}}</p>
+                    <p class="ell w100p" v-for="(v, i) in item.rankSongList" :key="v.id">{{i + 1}}. {{v.name}}</p>
                   </div>
                 <!-- </router-link> -->
               </li>

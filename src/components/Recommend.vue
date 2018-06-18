@@ -72,7 +72,7 @@ export default {
       disName: '',
       menuList: [{
         icon: 'icon-diantai',
-        name: '私人FM',
+        name: '歌手榜',
         link: '/singer'
       }, {
         icon: 'icon-04',
