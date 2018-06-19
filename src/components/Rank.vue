@@ -7,7 +7,7 @@
           <div v-if="rankArr.length === 5">
             <type-title title="官方榜"/>
             <ul class="rank-ul">
-              <li class="border-b flex brank-item" v-for="item in rankList" :key="item.idx">
+              <li class="border-b flex brank-item" v-for="item in rankList" :key="item.idx" @click="rankDetail(item.idx)">
                 <!-- <router-link class="flex brank-item" to> -->
                   <img class="brank-img" v-lazy="item.coverImgUrl" alt="">
                   <div class="flex flex-column song-list ell">
@@ -18,7 +18,7 @@
             </ul>
             <type-title title="全球榜"/>
             <ul class="global-rank flex">
-              <li class="g-item flex flex-column" v-for="item in globalRank" :key="item.idx">
+              <li class="g-item flex flex-column" v-for="item in globalRank" :key="item.idx" @click="rankDetail(item.idx)">
                 <img v-lazy="item.img" :alt="item.name">
                 <span class="ell">{{item.name}}</span>
               </li>
@@ -28,6 +28,7 @@
         <div class="loading-container pa" v-show='rankArr.length !== 5'>
           <loading/>
         </div>
+        <router-view></router-view>
       </scroll>
     </child-wrap>
   </transition>
@@ -40,6 +41,8 @@ import Title from '@/base/Title'
 import Scroll from '@/base/Scroll'
 import TypeTitle from '@/base/TypeTitle'
 import Loading from '@/base/Loading'
+import {mapMutations} from 'vuex'
+import CreateRankDetail from '@/common/js/rankDetail'
 
 export default {
   name: 'Rank',
@@ -99,20 +102,22 @@ export default {
         let item = res.data.playlist
         this.rankList = {
           ...this.rankList,
-          [idx]: {
-            id: idx,
-            name: item.name,
-            coverImgUrl: item.coverImgUrl,
-            songList: item.tracks,
-            rankSongList: item.tracks.slice(0, 3),
-            updateTime: item.updateTime,
-            songCount: item.trackCount,
-            subscribedCount: item.subscribedCount
-          }
+          [idx]: new CreateRankDetail(item, idx)
         }
         this.rankArr.push(idx)
+        console.log(res)
       })
-    }
+    },
+    rankDetail (idx) {
+      this.$router.push({
+        path: '/rank/' + idx
+      })
+      // 全球榜需要到详情页在发请求
+      this.setRankDetail(this.rankList[idx] || idx)
+    },
+    ...mapMutations({
+      setRankDetail: 'SET_RANK_DETAIL'
+    })
   }
 }
 </script>

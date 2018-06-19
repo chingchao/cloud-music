@@ -2,11 +2,11 @@
   <transition name="singer-detail">
     <child-wrap>
       <Title :title="singer.name"/>
-      <scroll class="detail">
+      <scroll class="detail" :data="list">
         <div>
           <ul v-if="list.length">
             <li v-for='(item, index) in list' :key='item.id'>
-              <music-item :index='index' :item='item'></music-item>
+              <music-item :index='index + 1' :item='item'></music-item>
             </li>
           </ul>
         </div>
@@ -23,7 +23,7 @@ import Title from '@/base/Title'
 import Loading from '@/base/Loading'
 import Scroll from '@/base/Scroll'
 import MusicItem from '@/components/MusicItem'
-import {mapGetters} from 'vuex'
+// import {mapGetters} from 'vuex'
 import {getSingerDetail} from '@/api/singer'
 import Song from '@/common/js/song'
 
@@ -43,11 +43,10 @@ export default {
     MusicItem
   },
   computed: {
-    ...mapGetters(['singer'])
+    // ...mapGetters(['singer'])
   },
   created () {
-    console.log(this.singer)
-    // this.singer =
+    this.singer = this.$store.state.singer
     this._getSingerDetail(this.singer.id)
   },
   methods: {
@@ -61,7 +60,7 @@ export default {
   }
 }
 </script>
-<style>
+<style scoped>
   .detail {
     overflow: hidden;
     position: absolute;

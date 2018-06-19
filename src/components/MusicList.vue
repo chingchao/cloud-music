@@ -6,7 +6,7 @@
         <div>
           <ul class='list' v-if="list.length">
             <li v-for='(item, index) in list' :key='item.id'>
-              <music-item :index='index' :item='item'></music-item>
+              <music-item :index='index + 1' :item='item'></music-item>
             </li>
           </ul>
         </div>
