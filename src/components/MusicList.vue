@@ -18,21 +18,26 @@
   </transition>
 </template>
 <script>
-import {getRecommendDetail} from '@/api/recommend'
 import ChildWrap from '@/base/ChildWrap'
 import MusicItem from '@/components/MusicItem'
 import Title from '@/base/Title'
 import Scroll from '@/base/Scroll'
 import Loading from '@/base/Loading'
-import Song from '@/common/js/song'
 
 export default {
   name: 'MusicList',
-  data () {
-    return {
-      list: [],
-      info: {},
-      title: ''
+  props: {
+    title: {
+      type: String,
+      default: ''
+    },
+    list: {
+      type: Array,
+      default: () => []
+    },
+    bgImg: {
+      type: String,
+      default: ''
     }
   },
   components: {
@@ -41,20 +46,6 @@ export default {
     Title,
     Scroll,
     Loading
-  },
-  created () {
-    this._getRecommendDetail()
-  },
-  methods: {
-    _getRecommendDetail () {
-      getRecommendDetail(this.$route.params.id).then(res => {
-        console.log(res)
-        this.list = res.data.playlist.tracks.map(item => {
-          return new Song(item)
-        })
-        this.title = res.data.playlist.name
-      })
-    }
   }
 }
 </script>
@@ -69,11 +60,5 @@ export default {
   .loading-container {
     top: 50%;
     width: 100%;
-  }
-  .slide-enter-active, .slide-leave-active {
-    transition: all 0.3s;
-  }
-  .slide-enter, .slide-leave-to {
-    transform: translate3d(100%, 0, 0);
   }
 </style>

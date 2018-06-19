@@ -42,7 +42,6 @@ import Scroll from '@/base/Scroll'
 import TypeTitle from '@/base/TypeTitle'
 import Loading from '@/base/Loading'
 import {mapMutations} from 'vuex'
-import CreateRankDetail from '@/common/js/rankDetail'
 
 export default {
   name: 'Rank',
@@ -102,7 +101,16 @@ export default {
         let item = res.data.playlist
         this.rankList = {
           ...this.rankList,
-          [idx]: new CreateRankDetail(item, idx)
+          [idx]: {
+            idx: idx,
+            name: item.name,
+            coverImgUrl: item.coverImgUrl,
+            songList: item.tracks,
+            rankSongList: item.tracks.slice(0, 3),
+            updateTime: item.updateTime,
+            songCount: item.trackCount,
+            subscribedCount: item.subscribedCount
+          }
         }
         this.rankArr.push(idx)
         console.log(res)
