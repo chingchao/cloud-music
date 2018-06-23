@@ -1,9 +1,12 @@
 <template>
   <transition name='slide'>
     <child-wrap>
-      <Title :title='title'/>
-      <scroll ref="scroll" class='list-content' :data='list'>
+      <Title v-if="title" :title='title' :colorType="bgImg ? 1 : 0"/>
+      <scroll ref="scroll" class='list-content' :class="{'translate-y': bgImg}" :data='list'>
         <div>
+          <div class="info">
+            <img class="bg-img" v-if="bgImg" v-lazy="bgImg" alt="">
+          </div>
           <ul class='list' v-if="list.length">
             <li v-for='(item, index) in list' :key='item.id'>
               <music-item :index='index + 1' :item='item'></music-item>
@@ -60,5 +63,12 @@ export default {
   .loading-container {
     top: 50%;
     width: 100%;
+  }
+
+  .bg-img {
+    width: 100%;
+  }
+  .translate-y {
+    top: 0;
   }
 </style>

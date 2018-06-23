@@ -1,6 +1,6 @@
 <template>
   <transition name="rank-detail">
-    <music-list :title="title" :list="rankList"></music-list>
+    <music-list :title="title" :list="rankList" :bgImg="bgImg"></music-list>
   </transition>
 </template>
 <script>
@@ -14,7 +14,8 @@ export default {
   data () {
     return {
       rankList: [],
-      title: ''
+      title: '',
+      bgImg: ''
     }
   },
   components: {
@@ -33,6 +34,7 @@ export default {
         return new Song(item)
       })
       this.title = rankListData.name
+      this.bgImg = rankListData.coverImgUrl
     }
   },
   methods: {
@@ -43,6 +45,7 @@ export default {
           return new Song(item)
         })
         this.title = item.name
+        this.bgImg = item.coverImgUrl
       })
     }
   }

@@ -1,6 +1,6 @@
 <template>
   <transition name='slide'>
-    <music-list :title="title" :list="list"></music-list>
+    <music-list :title="title" :list="list" :bgImg="bgImg"></music-list>
   </transition>
 </template>
 <script>
@@ -30,6 +30,7 @@ export default {
           return new Song(item)
         })
         this.title = res.data.playlist.name
+        this.bgImg = res.data.playlist.coverImgUrl
       })
     }
   }

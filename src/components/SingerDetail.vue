@@ -1,6 +1,6 @@
 <template>
   <transition name="singer-detail">
-    <music-list :title="title" :list="list"></music-list>
+    <music-list :title="title" :list="list" :bgImg="bgImg"></music-list>
   </transition>
 </template>
 <script>
@@ -14,7 +14,8 @@ export default {
   data () {
     return {
       list: [],
-      title: ''
+      title: '',
+      bgImg: ''
     }
   },
   components: {
@@ -37,6 +38,7 @@ export default {
         console.log(res)
         this.list = res.data.hotSongs.map(item => new Song(item))
         this.title = this.singer.name
+        this.bgImg = res.data.artist.picUrl
       })
     }
   }

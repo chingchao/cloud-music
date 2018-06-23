@@ -71,7 +71,7 @@ export default {
       banner: [],
       disName: '',
       menuList: [{
-        icon: 'icon-diantai',
+        icon: 'icon-geshou',
         name: '歌手榜',
         link: '/singer'
       }, {

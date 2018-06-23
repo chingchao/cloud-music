@@ -1,23 +1,38 @@
 <template>
   <div class="title-container">
-    <mu-appbar class='bg-theme' textColor='#fff' :zDepth="0">
-      <template slot='left'>
-          <div class="back" @click="back">
-              <i class='icon-fanhui iconfont'></i>
-          </div>
-      </template>
-      <template slot='default'>
-          <mu-flex class='nav-item' align-items="center" justify-content="start">
-             <h1 class="title ell">{{title}}</h1>
-          </mu-flex>
-      </template>
-    </mu-appbar>
+    <div class="flex" :class="className">
+      <div class="back" @click="back">
+          <i class='icon-fanhui iconfont'></i>
+      </div>
+      <div class='nav-item flex'>
+          <h1 class="title ell">{{title}}</h1>
+      </div>
+    </div>
   </div>
 </template>
 <script>
 export default {
   name: 'Title',
-  props: ['title'],
+  props: {
+    title: {
+      type: String,
+      default: ''
+    },
+    colorType: {
+      type: Number,
+      default: 0
+    }
+  },
+  computed: {
+    className () {
+      return {
+        'bg-theme': this.colorType === 0,
+        'bg-transparent': this.colorType === 1,
+        'color-theme': this.colorType === 1,
+        'color-white': this.colorType === 0
+      }
+    }
+  },
   methods: {
     back () {
       window.history.back()
@@ -32,10 +47,19 @@ export default {
     width: 100%;
     z-index: 2;
   }
+  .back {
+    padding: 6px 8px;
+  }
   .title-wrap {
     padding-left: 0;
   }
   .title {
     max-width: 100%;
+    line-height: 1;
+    font-size: 20px;
+  }
+  .nav-item {
+    flex-grow: 1;
+    height: 56px;
   }
 </style>

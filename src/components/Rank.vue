@@ -28,8 +28,8 @@
         <div class="loading-container pa" v-show='rankArr.length !== 5'>
           <loading/>
         </div>
-        <router-view></router-view>
       </scroll>
+      <router-view></router-view>
     </child-wrap>
   </transition>
 </template>
