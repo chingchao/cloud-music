@@ -13,7 +13,7 @@
                 <router-link to='/recommend'>
                     <i class="iconfont icon-yinle-yuanshijituantubiao i-nav"></i>
                 </router-link>
-                <router-link to='/vdeio'>
+                <router-link to='/mv'>
                     <i class="iconfont icon-shipin i-nav"></i>
                 </router-link>
             </mu-flex>

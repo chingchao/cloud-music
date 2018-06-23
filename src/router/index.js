@@ -7,6 +7,7 @@ import Rank from '@/components/Rank'
 import Singer from '@/components/Singer'
 import SingerDetail from '@/components/SingerDetail'
 import RankDetail from '@/components/RankDetail'
+import Mv from '@/components/Mv'
 // import BaseNav from '@/base/BaseNav'
 
 Vue.use(Router)
@@ -40,6 +41,9 @@ export default new Router({
           component: SingerDetail
         }]
       }]
+    }, {
+      path: '/mv',
+      component: Mv
     }
   ]
 })
