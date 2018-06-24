@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import * as actions from './actions'
 import * as getters from './getter'
-import * as state from './state'
+import state from './state'
 import mutations from './mutations'
 // vux 的插件，修改state 时，会在控制台打印 logger
 import createLogger from 'vuex/dist/logger'

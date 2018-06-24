@@ -1,6 +1,6 @@
 <template>
   <div class="title-container">
-    <div class="flex" :class="className">
+    <div class="flex color-white" :class="className">
       <div class="back" @click="back">
           <i class='icon-fanhui iconfont'></i>
       </div>
@@ -27,9 +27,7 @@ export default {
     className () {
       return {
         'bg-theme': this.colorType === 0,
-        'bg-transparent': this.colorType === 1,
-        'color-theme': this.colorType === 1,
-        'color-white': this.colorType === 0
+        'bg-transparent': this.colorType === 1
       }
     }
   },

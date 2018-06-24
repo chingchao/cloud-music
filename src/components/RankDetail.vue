@@ -1,10 +1,10 @@
 <template>
   <transition name="rank-detail">
-    <music-list :title="title" :list="rankList" :bgImg="bgImg"></music-list>
+    <music-list :title="title" :list="list" :bgImg="bgImg"></music-list>
   </transition>
 </template>
 <script>
-// import {mapGetters} from 'vuex'
+import {mapGetters} from 'vuex'
 import MusicList from '@/components/MusicList'
 import Song from '@/common/js/song'
 import {getRank} from '@/api/rank'
@@ -13,7 +13,7 @@ export default {
   name: 'RankDetail',
   data () {
     return {
-      rankList: [],
+      list: [],
       title: '',
       bgImg: ''
     }
@@ -22,15 +22,17 @@ export default {
     MusicList
   },
   computed: {
-    // ...mapGetters(['rankList']),
+    ...mapGetters(['rankList'])
   },
   created () {
-    // 得到的可能是榜单详情，可能是榜单id
-    const rankListData = this.$store.state.rankList
+    // 得到的可能是榜单详情，可能只有榜单id
+    const rankListData = this.rankList
+    // const rankListData = this.$store.state.rankList
+    console.log(rankListData)
     if (!rankListData.name) {
-      this._getRankDetail(rankListData)
+      this._getRankDetail(rankListData.id)
     } else {
-      this.rankList = rankListData.songList.map(item => {
+      this.list = rankListData.songList.map(item => {
         return new Song(item)
       })
       this.title = rankListData.name
@@ -41,7 +43,7 @@ export default {
     _getRankDetail (idx) {
       getRank(idx).then(res => {
         let item = res.data.playlist
-        this.rankList = item.tracks.map(item => {
+        this.list = item.tracks.map(item => {
           return new Song(item)
         })
         this.title = item.name

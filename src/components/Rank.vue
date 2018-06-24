@@ -121,7 +121,7 @@ export default {
         path: '/rank/' + idx
       })
       // 全球榜需要到详情页在发请求
-      this.setRankDetail(this.rankList[idx] || idx)
+      this.setRankDetail(this.rankList[idx] || {id: idx})
     },
     ...mapMutations({
       setRankDetail: 'SET_RANK_DETAIL'

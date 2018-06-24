@@ -4,7 +4,7 @@
   </transition>
 </template>
 <script>
-// import {mapGetters} from 'vuex'
+import {mapGetters} from 'vuex'
 import {getSingerDetail} from '@/api/singer'
 import Song from '@/common/js/song'
 import MusicList from '@/components/MusicList'
@@ -22,10 +22,10 @@ export default {
     MusicList
   },
   computed: {
-    // ...mapGetters(['singer'])
+    ...mapGetters(['singer'])
   },
   created () {
-    this.singer = this.$store.state.singer
+    console.log(this.singer)
     this._getSingerDetail(this.singer.id)
   },
   methods: {
