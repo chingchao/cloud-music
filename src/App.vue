@@ -1,6 +1,6 @@
 <template>
   <div id="app" class='flex flex-column'>
-    <base-nav class='nav'/>
+    <base-nav/>
     <!-- <img src="./assets/logo.png"> -->
     <div class="content">
       <keep-alive>
@@ -24,16 +24,10 @@ export default {
 
 <style>
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  /* font-family: 'Avenir', Helvetica, Arial, sans-serif; */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   height: 100%;
-}
-.nav {
-  flex-shrink: 0;
-  width: 100%;
-  position: relative;
-  z-index: 1;
 }
 .content {
    flex-grow: 1;

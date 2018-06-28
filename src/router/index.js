@@ -8,6 +8,7 @@ import Singer from '@/components/Singer'
 import SingerDetail from '@/components/SingerDetail'
 import RankDetail from '@/components/RankDetail'
 import Mv from '@/components/Mv'
+import Search from '@/components/Search'
 // import BaseNav from '@/base/BaseNav'
 
 Vue.use(Router)
@@ -44,6 +45,10 @@ export default new Router({
     }, {
       path: '/mv',
       component: Mv
+    }, {
+      path: '/search',
+      name: 'search',
+      component: Search
     }
   ]
 })

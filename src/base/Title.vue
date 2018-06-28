@@ -4,7 +4,13 @@
       <div class="back" @click="back">
           <i class='icon-fanhui iconfont'></i>
       </div>
-      <div class='nav-item flex'>
+      <div v-if="type==='input'" class='nav-item flex nav-input pr'>
+          <form class="w100p" action="" @submit.prevent="searchFn">
+            <input class="dib input border-b w100p h100p" type="search" v-model="keyWords">
+          </form>
+          <i class="icon-cha iconfont pa" v-show="keyWords" @click="empty"></i>
+      </div>
+      <div v-else class='nav-item flex'>
           <h1 class="title ell">{{title}}</h1>
       </div>
     </div>
@@ -21,6 +27,15 @@ export default {
     colorType: {
       type: Number,
       default: 0
+    },
+    type: {
+      type: String,
+      default: ''
+    }
+  },
+  data () {
+    return {
+      keyWords: ''
     }
   },
   computed: {
@@ -34,11 +49,17 @@ export default {
   methods: {
     back () {
       window.history.back()
+    },
+    empty () {
+      this.keyWords = ''
+    },
+    searchFn () {
+      this.$emit('search', this.keyWords)
     }
   }
 }
 </script>
-<style scoped>
+<style lang="less" scoped>
   .title-container {
     position: fixed;
     top: 0;
@@ -59,5 +80,26 @@ export default {
   .nav-item {
     flex-grow: 1;
     height: 56px;
+  }
+  .nav-input {
+    margin-right: 10px;
+    form {
+      height: 70%;
+    }
+    .input {
+      flex: 1;
+      align-items: stretch;
+      background: transparent;
+      outline: none;
+      color: white;
+      padding-right: 40px;
+    }
+    i {
+      width: 40px;
+      right: 0;
+      height: 40px;
+      line-height: 40px;
+      text-align: right;
+    }
   }
 </style>
