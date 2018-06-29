@@ -94,6 +94,14 @@ export default {
       color: white;
       padding-right: 40px;
     }
+    // placeholder
+    input[type=search]::-webkit-input-placeholder{
+      color: rgba(256,256,256,0.5);
+    }
+    // 搜索框去掉小×
+    input[type=search]::-webkit-search-cancel-button{
+      -webkit-appearance: none;
+    }
     i {
       width: 40px;
       right: 0;

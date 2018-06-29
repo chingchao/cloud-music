@@ -49,11 +49,31 @@ export default {
   },
   created () {
     this._getHotSearch()
+    this.placeholder = ''
   },
+  mounted () {
+    this.inputNode = this.$refs.searchNode.$el.querySelector('input')
+    this.inputNode.focus()
+  },
+  beforeRouteEnter (to, from, next) {
+    console.log('beforeRouteEnter')
+    next(vm => {
+      vm.inputNode.focus()
+      console.log(vm.historyList)
+    })
+  },
+  // befroeRouteUpdate (to, from, next) {
+  //   console.log('befroeRouteUpdate')
+  //   next()
+  // },
+  // beforeRouteLeave (to, from, next) {
+  //   console.log('beforeRouteLeave')
+  //   next()
+  // },
   watch: {
     hotSearchList (newList) {
-      let text = newList[0] ? newList[0].first : ''
-      this.$refs.searchNode.$el.querySelector('input').placeholder = text
+      this.placeholder = newList[0] ? newList[0].first : ''
+      this.inputNode.placeholder = this.placeholder
     }
   },
   methods: {
@@ -64,7 +84,10 @@ export default {
       })
     },
     search (k) {
-      if (!k) k = this.hotSearchList[0] ? this.hotSearchList[0].first : ''
+      if (!k) {
+        k = this.hotSearchList[0] ? this.hotSearchList[0].first : ''
+        this.inputNode.value = this.placeholder
+      }
       if (!k) return false
       searchFn(k).then(res => {
         console.log(res)
