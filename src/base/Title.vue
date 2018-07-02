@@ -55,6 +55,7 @@ export default {
     },
     searchFn () {
       this.$emit('search', this.keyWords)
+      // this.
     }
   }
 }

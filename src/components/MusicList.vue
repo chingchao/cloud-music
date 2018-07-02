@@ -26,7 +26,7 @@
             </li>
           </ul>
         </div>
-        <div ref="layer" class="layer pa w100p h100p bg-white"></div>
+        <div ref="layer" class="layer pa w100p bg-white"></div>
         <div class="loading-container pa" v-show='!list.length'>
           <loading/>
         </div>
@@ -93,6 +93,7 @@ export default {
     scrollY (newY) {
       let translateY = Math.max(newY, -this.bgImgHeight + MIN_HEIGHT)
       this.$refs.layer.style['transform'] = `translate3d(0, ${translateY}px, 0)`
+      // this.$refs.layer.style['top'] = `${translateY}px`
       let zIndex = 0
       if (newY < -this.bgImgHeight + MIN_HEIGHT) {
         this.$refs.info.style.height = MIN_HEIGHT + 'px'
@@ -136,7 +137,7 @@ export default {
     z-index: 1;
   }
   .info {
-    top: 70px;
+    top: 66px;
     padding: 0 30px;
     z-index: 2;
   }
@@ -153,5 +154,6 @@ export default {
   .layer {
     top: 0;
     left: 0;
+    bottom: 0;
   }
 </style>
