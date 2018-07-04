@@ -7,15 +7,18 @@
         <router-view/>
       </keep-alive>
     </div>
+    <player/>
   </div>
 </template>
 
 <script>
 import BaseNav from '@/base/BaseNav'
+import Player from '@/components/Player'
 export default {
   name: 'App',
   components: {
-    BaseNav
+    BaseNav,
+    Player
   }
 }
 </script>
