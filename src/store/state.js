@@ -12,7 +12,7 @@ const state = {
   // 全屏
   fullScreen: false,
   // 播放列表
-  palyList: [],
+  playList: [],
   // 顺序列表
   sequenceList: [],
   // 播放模式（顺序/随机）

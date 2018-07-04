@@ -1,5 +1,5 @@
 <template>
-  <div class='music-item flex'>
+  <div class='music-item flex' @click="selectSong">
     <span class='order color-gray'>{{index}}</span>
     <div class='flex-grow flex info border-b'>
       <div class='flex-grow'>
@@ -13,7 +13,12 @@
 <script>
 export default {
   name: 'MusicItem',
-  props: ['index', 'item']
+  props: ['index', 'item'],
+  methods: {
+    selectSong () {
+      this.$emit('selectItem', this.item, this.index - 1)
+    }
+  }
 }
 </script>
 

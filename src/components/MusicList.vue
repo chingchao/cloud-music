@@ -22,7 +22,7 @@
         <div class="pr list-wrap">
           <ul class='list'>
             <li v-for='(item, index) in list' :key='item.id'>
-              <music-item :index='index + 1' :item='item'></music-item>
+              <music-item :index='index + 1' :item='item' @selectItem="selectSong"></music-item>
             </li>
           </ul>
         </div>
@@ -40,6 +40,7 @@ import MusicItem from '@/components/MusicItem'
 import Title from '@/base/Title'
 import Scroll from '@/base/Scroll'
 import Loading from '@/base/Loading'
+import {mapActions} from 'vuex'
 
 const MIN_HEIGHT = 56
 
@@ -87,7 +88,16 @@ export default {
   methods: {
     scroll (pos) {
       this.scrollY = pos.y
-    }
+    },
+    selectSong (item, index) {
+      this.selectPlay({
+        list: this.list,
+        index
+      })
+    },
+    ...mapActions([
+      'selectPlay'
+    ])
   },
   watch: {
     scrollY (newY) {

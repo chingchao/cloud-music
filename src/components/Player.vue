@@ -1,19 +1,21 @@
 <template>
-  <div class="player pa w100p" v-if="!palyList.length">
+  <div class="player pa w100p" v-if="playList.length">
+    <transition name="full">
     <div class="flex w100p color-white full-screen" v-if="fullScreen">
+      <div class="bg-filter pa w100p h100p" :style="{'background-image': 'url(' + currentSong.img + ')'}"></div>
       <div class="title pr w100p">
-        <i class="iconfont icon-xiangxia-copy pa" @click="setFullScreen(false)"></i>
-        <span class="title-text pa w100p ell">title</span>
+        <i class="iconfont icon-xiangxia-copy pa" @click="closePlayer"></i>
+        <span class="title-text pa w100p ell">{{currentSong.name}}</span>
       </div>
-      <div class="play-content w100p">
+      <div class="play-content w100p pr">
         <div class="band flex">
           <div class="img-wrap flex">
-            <img src="https://y.gtimg.cn/music/photo_new/T002R300x300M000003JFTIm1Wd4n2.jpg?max_age=2592000" alt="">
+            <img :src="currentSong.img" alt="">
           </div>
           <p class="playing-lyric">此歌曲为没有填词的纯音乐，请您欣赏</p>
         </div>
       </div>
-      <div class="fotter flex w100p">
+      <div class="fotter flex w100p pr">
         <div class="process flex w100p">
           <span>2:30</span>
           <div class="bar pr">
@@ -27,36 +29,46 @@
           <i class="iconfont icon-xunhuanbofang"></i>
           <div class="oprate flex">
             <i class="iconfont icon-yduishangyiqu"></i>
-            <i class="iconfont icon-zanting1 center-icon" v-if="playing"></i>
-            <i class="iconfont icon-bofang center-icon" v-else></i>
+            <i class="iconfont icon-zanting1 center-icon" v-if="playing" @click="play(false)"></i>
+            <i class="iconfont icon-bofang center-icon" v-else @click="play(true)"></i>
             <i class="iconfont icon-xiayiqu"></i>
           </div>
           <i class="iconfont icon-liebiao"></i>
         </div>
       </div>
     </div>
-    <div class="flex w100p small-screen bg-white" v-else @click="setFullScreen(true)">
-      <img src="https://y.gtimg.cn/music/photo_new/T002R300x300M000003JFTIm1Wd4n2.jpg?max_age=2592000" alt="">
+    </transition>
+    <transition name="mini">
+    <div class="flex w100p small-screen bg-white" v-if="!fullScreen" @click="setFullScreen(true)">
+      <img :src="currentSong.img" alt="">
       <div class="info flex">
-        <span class="song-name ell">Rance</span>
-        <span class="singer ell">Lee</span>
+        <span class="song-name ell">{{currentSong.name}}</span>
+        <span class="singer ell">{{currentSong.singer}}</span>
       </div>
       <i class="iconfont icon-zanting1 center-icon" v-if="playing"></i>
       <i class="iconfont icon-bofang center-icon" v-else></i>
       <i class="iconfont icon-liebiao"></i>
     </div>
+    </transition>
   </div>
 </template>
 <script>
 import {mapGetters, mapMutations} from 'vuex'
 export default {
   computed: {
-    ...mapGetters(['playing', 'fullScreen', 'palyList'])
+    ...mapGetters(['playing', 'fullScreen', 'playList', 'currentSong'])
   },
   methods: {
+    closePlayer () {
+      this.setFullScreen(false)
+    },
     ...mapMutations({
-      setFullScreen: 'SET_FULL_SCREEN'
+      setFullScreen: 'SET_FULL_SCREEN',
+      play: 'SET_PLAYING_STATE'
     })
+  },
+  mounted () {
+    console.log(this.currentSong)
   }
 }
 </script>
@@ -65,13 +77,25 @@ export default {
     bottom: 0;
     z-index: 10;
     height: 50px;
+    box-shadow: 0 0 10px 0px rgba(0,0,0,0.1);
   }
   .full-screen {
-    background: #585858;
     top: 0;
     bottom: 0;
     position: fixed;
     flex-direction: column;
+    background-color: #444;
+  }
+  .bg-filter {
+    top: 0;
+    left: 0;
+    background: #aaa;
+    opacity: 0.5;
+    filter: blur(10px);
+    background-size: 100% 100%;
+    background-position: center center;
+    background-repeat: no-repeat;
+    transform: scale(1.3);
   }
   .title {
     height: 56px;
@@ -183,5 +207,27 @@ export default {
       font-size: 46px;
       margin: 0 10px;
     }
+  }
+
+  .full-enter-active, .full-leave-active {
+    transition: 0.4s;
+    .title, .fotter {
+      transition: all 0.4s cubic-bezier(0.86, 0.18, 0.82, 1.32);
+    }
+  }
+  .full-enter, .full-leave-to {
+    opacity: 0;
+    .title, .fotter {
+      transform: translate3d(0, -100px, 0)
+    }
+    .fotter {
+      transform: translate3d(0, 100px, 0)
+    }
+  }
+  .mini-enter-active, .mini-leave-active {
+    transition: all 0.4s;
+  }
+  .mini-enter, .mini-leave-to {
+    opacity: 0;
   }
 </style>
