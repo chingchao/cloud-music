@@ -5,7 +5,10 @@
       <div class="bg-filter pa w100p h100p" :style="{'background-image': 'url(' + currentSong.img + ')'}"></div>
       <div class="title pr w100p">
         <i class="iconfont icon-xiangxia-copy pa" @click="closePlayer"></i>
-        <span class="title-text pa w100p ell">{{currentSong.name}}</span>
+        <div class="title-text pa w100p ell flex h100p">
+          <h1 class="w100p ell">{{currentSong.name}}</h1>
+          <span class="w100p ell singer">{{currentSong.singers}}</span>
+        </div>
       </div>
       <div class="play-content w100p pr">
         <div class="band flex">
@@ -43,7 +46,7 @@
       <img :src="currentSong.img" alt="">
       <div class="info flex">
         <span class="song-name ell">{{currentSong.name}}</span>
-        <span class="singer ell">{{currentSong.singer}}</span>
+        <span class="singer ell">{{currentSong.singers}}</span>
       </div>
       <i class="iconfont icon-zanting1 center-icon" v-if="playing"></i>
       <i class="iconfont icon-bofang center-icon" v-else></i>
@@ -76,7 +79,7 @@ export default {
   .player {
     bottom: 0;
     z-index: 10;
-    height: 50px;
+    // height: 50px;
     box-shadow: 0 0 10px 0px rgba(0,0,0,0.1);
   }
   .full-screen {
@@ -111,6 +114,12 @@ export default {
     text-align: center;
     left: 0;
     font-size: 20px;
+    flex-direction: column;
+    justify-content: space-around;
+    line-height: 1;
+    .singer {
+      font-size: 16px;
+    }
   }
 
   .play-content {
@@ -135,7 +144,7 @@ export default {
   .small-screen {
     padding: 0 10px;
     box-sizing: border-box;
-    height: 100%;
+    height: 50px;
     color: #666;
     img {
       width: 36px;
@@ -217,7 +226,7 @@ export default {
   }
   .full-enter, .full-leave-to {
     opacity: 0;
-    .title, .fotter {
+    .title{
       transform: translate3d(0, -100px, 0)
     }
     .fotter {
