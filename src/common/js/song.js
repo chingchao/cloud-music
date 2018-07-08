@@ -1,7 +1,7 @@
 export default class Song {
   constructor (item) {
     this.name = item.name
-    this.id = item.aid
+    this.id = item.id
     this.al_name = item.al.name
     this.singers = item.ar.map(item => item.name).join('/')
     this.img = item.al.picUrl

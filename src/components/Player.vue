@@ -53,6 +53,7 @@
       <i class="iconfont icon-liebiao"></i>
     </div>
     </transition>
+    <audio ref="audio" :src="currentSong.url"></audio>
   </div>
 </template>
 <script>
@@ -60,6 +61,9 @@ import {mapGetters, mapMutations} from 'vuex'
 export default {
   computed: {
     ...mapGetters(['playing', 'fullScreen', 'playList', 'currentSong'])
+  },
+  mounted () {
+    console.log(this.currentSong)
   },
   methods: {
     closePlayer () {
@@ -70,8 +74,18 @@ export default {
       play: 'SET_PLAYING_STATE'
     })
   },
-  mounted () {
-    console.log(this.currentSong)
+  watch: {
+    currentSong () {
+      this.$nextTick(() => {
+        this.$refs.audio.play()
+      })
+    },
+    playing (newPlaying) {
+      this.$nextTick(() => {
+        const audio = this.$refs.audio
+        newPlaying ? audio.play() : audio.pause()
+      })
+    }
   }
 }
 </script>
