@@ -31,10 +31,10 @@
         <div class="flex w100p">
           <i class="iconfont icon-xunhuanbofang"></i>
           <div class="oprate flex">
-            <i class="iconfont icon-yduishangyiqu"></i>
+            <i class="iconfont icon-yduishangyiqu" @click="changeSong(-1)"></i>
             <i class="iconfont icon-zanting1 center-icon" v-if="playing" @click="play(false)"></i>
             <i class="iconfont icon-bofang center-icon" v-else @click="play(true)"></i>
-            <i class="iconfont icon-xiayiqu"></i>
+            <i class="iconfont icon-xiayiqu" @click="changeSong(1)"></i>
           </div>
           <i class="iconfont icon-liebiao"></i>
         </div>
@@ -48,8 +48,8 @@
         <span class="song-name ell">{{currentSong.name}}</span>
         <span class="singer ell">{{currentSong.singers}}</span>
       </div>
-      <i class="iconfont icon-zanting1 center-icon" v-if="playing"></i>
-      <i class="iconfont icon-bofang center-icon" v-else></i>
+      <i class="iconfont icon-zanting1 center-icon" v-if="playing" @click.stop="play(false)"></i>
+      <i class="iconfont icon-bofang center-icon" v-else @click.stop="play(true)"></i>
       <i class="iconfont icon-liebiao"></i>
     </div>
     </transition>
@@ -60,7 +60,7 @@
 import {mapGetters, mapMutations} from 'vuex'
 export default {
   computed: {
-    ...mapGetters(['playing', 'fullScreen', 'playList', 'currentSong'])
+    ...mapGetters(['playing', 'fullScreen', 'playList', 'currentSong', 'currentIndex'])
   },
   mounted () {
     console.log(this.currentSong)
@@ -69,9 +69,16 @@ export default {
     closePlayer () {
       this.setFullScreen(false)
     },
+    changeSong (num) {
+      let index = this.currentIndex + num
+      index = index < 0 ? this.playList.length : index >= this.playList.length ? 0 : index
+      this.setCurrentIndex(index)
+      if (!this.playing) this.play(true)
+    },
     ...mapMutations({
       setFullScreen: 'SET_FULL_SCREEN',
-      play: 'SET_PLAYING_STATE'
+      play: 'SET_PLAYING_STATE',
+      setCurrentIndex: 'SET_CURRENT_INDEX'
     })
   },
   watch: {
