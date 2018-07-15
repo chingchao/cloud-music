@@ -19,14 +19,23 @@
         </div>
       </div>
       <div class="fotter flex w100p pr">
-        <div class="process flex w100p">
-          <span>2:30</span>
-          <div class="bar pr">
-            <span class="pa flex">
-              <i class="bg-theme"></i>
-            </span>
+        <div class="progress-wrap flex w100p">
+          <span class="time">{{format(currentTime)}}</span>
+          <div class="bar-wrap"
+            ref="progressBar"
+            @touchstart.prevent="progressStart"
+            @touchmove.prevent="progressMove"
+            @touchend.prevent="progressEnd"
+          >
+            <div class="bar pr">
+              <div class="dib pa progress" :style="{width: progressWidth}">
+                <span class="pa flex">
+                  <i class="bg-theme"></i>
+                </span>
+              </div>
+            </div>
           </div>
-          <span>0:20</span>
+          <span class="time">{{format(duration)}}</span>
         </div>
         <div class="flex w100p">
           <i class="iconfont icon-xunhuanbofang"></i>
@@ -53,12 +62,26 @@
       <i class="iconfont icon-liebiao"></i>
     </div>
     </transition>
-    <audio ref="audio" :src="currentSong.url"></audio>
+    <audio ref="audio" :src="currentSong.url" @canplay="ready" @error="error" @timeupdate="updateTime" @ended="ended"></audio>
   </div>
 </template>
 <script>
 import {mapGetters, mapMutations} from 'vuex'
 export default {
+  data () {
+    return {
+      // audio 有一个canplay 事件，表示可以播放了，这是才能去切换歌曲，不然会报错。
+      songReady: false,
+      currentTime: 0,
+      duration: 0,
+      // 进度条宽度
+      progressWidth: '0'
+    }
+  },
+  created () {
+    // 进度条点击/拖动 存放数据
+    this.touch = {}
+  },
   computed: {
     ...mapGetters(['playing', 'fullScreen', 'playList', 'currentSong', 'currentIndex'])
   },
@@ -70,10 +93,61 @@ export default {
       this.setFullScreen(false)
     },
     changeSong (num) {
+      if (!this.songReady) return false
+      this.songReady = false
       let index = this.currentIndex + num
       index = index < 0 ? this.playList.length : index >= this.playList.length ? 0 : index
       this.setCurrentIndex(index)
       if (!this.playing) this.play(true)
+    },
+    ready () {
+      this.songReady = true
+      this.duration = this.$refs.audio.duration
+    },
+    error () {
+      this.songReady = true
+    },
+    updateTime (e) {
+      this.currentTime = e.target.currentTime
+      // 如果在拖动进度条，不改变进度条宽度
+      if (this.touch.init) return false
+      this.progressWidth = (this.currentTime / this.duration * 100 | 0) + '%'
+    },
+    ended () {
+      this.changeSong(1)
+    },
+    // 格式化时间
+    format (time) {
+      let minute = time / 60 | 0
+      let second = time % 60 | 0
+      minute = minute < 10 ? '0' + minute : minute
+      second = second < 10 ? '0' + second : second
+      return minute + ':' + second
+    },
+
+    // 进度条拖动/点击
+    _getPercent (x) {
+      let percent = (x - this.touch.left) / this.touch.width
+      percent = percent < 0 ? 0 : percent
+      percent = percent > 1 ? 1 : percent
+      this.progressWidth = (percent * 100 | 0) + '%'
+      this.currentTime = this.duration * percent
+      if (!this.touch.init) {
+        this.$refs.audio.currentTime = this.currentTime
+      }
+    },
+    progressStart (e) {
+      this.touch.init = true
+      this.touch.left = this.$refs.progressBar.offsetLeft
+      this.touch.width = this.$refs.progressBar.clientWidth
+    },
+    progressMove (e) {
+      if (!this.touch.init) return false
+      this._getPercent(e.touches[0].clientX)
+    },
+    progressEnd (e) {
+      this.touch.init = false
+      this._getPercent(e.changedTouches[0].clientX)
     },
     ...mapMutations({
       setFullScreen: 'SET_FULL_SCREEN',
@@ -136,10 +210,11 @@ export default {
     left: 0;
     font-size: 20px;
     flex-direction: column;
-    justify-content: space-around;
+    justify-content: center;
     line-height: 1;
     .singer {
       font-size: 16px;
+      margin-top: 4px;
     }
   }
 
@@ -201,19 +276,30 @@ export default {
     flex-direction: column;
     justify-content: center;
   }
-  .process {
+  .progress-wrap {
     margin-bottom: 20px;
-    .bar {
+    .bar-wrap {
       flex: 1;
+      padding: 6px 0;
+      margin: 0 10px;
+    }
+    .bar {
       height: 2px;
       background: rgba(256,256,256,0.4);
-      margin: 0 20px;
+    }
+    .time {
+      min-width: 3rem;
+    }
+    .progress {
+      height: 100%;
+      width: 0;
+      background: #fff;
       span {
         width: 14px;
         height: 14px;
         top: 0;
-        left: 0;
-        margin-top: -7px;
+        right: -7px;
+        margin-top: -6px;
         background: #fff;
         border-radius: 50px;
         justify-content: center;
@@ -232,6 +318,7 @@ export default {
     text-align: center;
     .iconfont {
       font-size: 40px;
+      touch-action: none;
     }
     .center-icon {
       font-size: 46px;
