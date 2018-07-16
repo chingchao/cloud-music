@@ -53,7 +53,7 @@ export default {
 </script>
 <style lang='less' scoped>
 .nav {
-    height: 56px;
+    height: 48px;
     padding: 0 10px;
     flex-shrink: 0;
     width: 100%;

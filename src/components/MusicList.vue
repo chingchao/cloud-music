@@ -8,7 +8,7 @@
         <div class="info flex pa">
           <img class="cover" v-if="bgImg" v-lazy="bgImg" alt="">
           <div class="color-white">
-            <span>{{title}}</span>
+            <span class="title-text">{{title}}</span>
           </div>
         </div>
       </div>
@@ -157,6 +157,9 @@ export default {
     border-radius: 3px;
     flex-shrink: 0;
     margin-right: 10px;
+  }
+  .title-text {
+    line-height: 1.4;
   }
   .list-wrap {
     z-index: 1;

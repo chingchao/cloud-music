@@ -181,7 +181,7 @@ export default {
   }
   .fixed-title {
     position: fixed;
-    top: 56px;
+    top: 48px;
     left: 0;
   }
   .img {

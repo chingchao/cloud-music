@@ -80,7 +80,7 @@ export default {
   }
   .nav-item {
     flex-grow: 1;
-    height: 56px;
+    height: 48px;
   }
   .nav-input {
     margin-right: 10px;

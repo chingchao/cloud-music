@@ -41,7 +41,7 @@ export default {
     flex-grow: 1;
   }
   .name {
-    font-size: 18px;
+    // font-size: 18px;
     margin-bottom: 6px;
   }
   .info {

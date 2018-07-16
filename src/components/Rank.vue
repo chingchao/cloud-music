@@ -133,7 +133,7 @@ export default {
   .rank-list {
     overflow: hidden;
     position: absolute;
-    top: 56px;
+    top: 48px;
     bottom: 0;
     width: 100%;
   }

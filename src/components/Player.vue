@@ -10,7 +10,7 @@
           <span class="w100p ell singer">{{currentSong.singers}}</span>
         </div>
       </div>
-      <div class="play-content w100p pr">
+      <div class="play-content w100p pr flex">
         <div class="band flex">
           <div class="img-wrap flex">
             <img :src="currentSong.img" alt="">
@@ -57,8 +57,13 @@
         <span class="song-name ell">{{currentSong.name}}</span>
         <span class="singer ell">{{currentSong.singers}}</span>
       </div>
-      <i class="iconfont icon-zanting1 center-icon" v-if="playing" @click.stop="play(false)"></i>
-      <i class="iconfont icon-bofang center-icon" v-else @click.stop="play(true)"></i>
+      <div class="pr" @click.stop="play(!playing)">
+        <svg class="pa" width="28" height="28" viewBox="0 0 100 100" version="1.1" xmlns="http://www.w3.org/2000/svg">
+          <circle class="circle-bar pa" r="50" cx="50" cy="50" fill="transparent" stroke-dasharray="314" :stroke-dashoffset="dashOffset"></circle>
+        </svg>
+        <i class="iconfont icon-zanting1 center-icon" v-if="playing"></i>
+        <i class="iconfont icon-bofang center-icon" v-else></i>
+      </div>
       <i class="iconfont icon-liebiao"></i>
     </div>
     </transition>
@@ -74,8 +79,8 @@ export default {
       songReady: false,
       currentTime: 0,
       duration: 0,
-      // 进度条宽度
-      progressWidth: '0'
+      // 进度
+      percent: 0
     }
   },
   created () {
@@ -83,6 +88,12 @@ export default {
     this.touch = {}
   },
   computed: {
+    progressWidth () {
+      return (this.percent * 100 | 0) + '%'
+    },
+    dashOffset () {
+      return (1 - this.percent) * 314
+    },
     ...mapGetters(['playing', 'fullScreen', 'playList', 'currentSong', 'currentIndex'])
   },
   mounted () {
@@ -111,7 +122,7 @@ export default {
       this.currentTime = e.target.currentTime
       // 如果在拖动进度条，不改变进度条宽度
       if (this.touch.init) return false
-      this.progressWidth = (this.currentTime / this.duration * 100 | 0) + '%'
+      this.percent = this.currentTime / this.duration
     },
     ended () {
       this.changeSong(1)
@@ -130,7 +141,7 @@ export default {
       let percent = (x - this.touch.left) / this.touch.width
       percent = percent < 0 ? 0 : percent
       percent = percent > 1 ? 1 : percent
-      this.progressWidth = (percent * 100 | 0) + '%'
+      this.percent = percent
       this.currentTime = this.duration * percent
       if (!this.touch.init) {
         this.$refs.audio.currentTime = this.currentTime
@@ -196,8 +207,8 @@ export default {
     transform: scale(1.3);
   }
   .title {
-    height: 56px;
-    line-height: 56px;
+    height: 48px;
+    line-height: 48px;
   }
   .icon-xiangxia-copy {
     padding: 0 18px;
@@ -219,8 +230,9 @@ export default {
   }
 
   .play-content {
-    flex: 1;
+    flex-grow: 1;
     flex-direction: column;
+    justify-content: center;
   }
   .band {
     height: 100%;
@@ -260,8 +272,14 @@ export default {
       color: #999;
       font-size: 14px;
     }
+    .circle-bar {
+      stroke: #dd4137;
+      stroke-width: 6px;
+      transform: scale(.92) rotate(-90deg);
+      transform-origin: center;
+    }
     .icon-liebiao {
-      margin-left: 6px;
+      margin-left: 8px;
     }
   }
   .playing-lyric {
@@ -270,14 +288,14 @@ export default {
   }
 
   .fotter {
-    height: 130px;
+    height: 160px;
     padding: 0 20px;
     box-sizing: border-box;
     flex-direction: column;
     justify-content: center;
   }
   .progress-wrap {
-    margin-bottom: 20px;
+    margin-bottom: 26px;
     .bar-wrap {
       flex: 1;
       padding: 6px 0;
@@ -317,12 +335,12 @@ export default {
     justify-content: center;
     text-align: center;
     .iconfont {
-      font-size: 40px;
+      font-size: 44px;
       touch-action: none;
     }
     .center-icon {
-      font-size: 46px;
-      margin: 0 10px;
+      font-size: 54px;
+      margin: 0 14px;
     }
   }
 

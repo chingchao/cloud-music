@@ -116,7 +116,7 @@ export default {
   .singer-wrap {
     overflow: hidden;
     position: absolute;
-    top: 56px;
+    top:48;
     bottom: 0;
     width: 100%;
   }
