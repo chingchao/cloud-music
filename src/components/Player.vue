@@ -38,7 +38,7 @@
           <span class="time">{{format(duration)}}</span>
         </div>
         <div class="flex w100p">
-          <i class="iconfont icon-xunhuanbofang"></i>
+          <i class="iconfont" :class="iconMode" @click="changeMode"></i>
           <div class="oprate flex">
             <i class="iconfont icon-yduishangyiqu" @click="changeSong(-1)"></i>
             <i class="iconfont icon-zanting1 center-icon" v-if="playing" @click="play(false)"></i>
@@ -72,6 +72,7 @@
 </template>
 <script>
 import {mapGetters, mapMutations} from 'vuex'
+import {playMode} from '@/common/js/config'
 export default {
   data () {
     return {
@@ -94,7 +95,10 @@ export default {
     dashOffset () {
       return (1 - this.percent) * 314
     },
-    ...mapGetters(['playing', 'fullScreen', 'playList', 'currentSong', 'currentIndex'])
+    iconMode () {
+      return this.mode === playMode.sequence ? 'icon-xunhuanbofang' : this.mode === playMode.loop ? 'icon-danquxunhuan' : 'icon-suijibofang'
+    },
+    ...mapGetters(['playing', 'fullScreen', 'playList', 'currentSong', 'currentIndex', 'mode'])
   },
   mounted () {
     console.log(this.currentSong)
@@ -160,10 +164,16 @@ export default {
       this.touch.init = false
       this._getPercent(e.changedTouches[0].clientX)
     },
+    // 切换播放模式
+    changeMode () {
+      const mode = (this.mode + 1) % 3
+      this.setPlayMode(mode)
+    },
     ...mapMutations({
       setFullScreen: 'SET_FULL_SCREEN',
       play: 'SET_PLAYING_STATE',
-      setCurrentIndex: 'SET_CURRENT_INDEX'
+      setCurrentIndex: 'SET_CURRENT_INDEX',
+      setPlayMode: 'SET_PLAY_MODE'
     })
   },
   watch: {
@@ -219,13 +229,16 @@ export default {
     box-sizing: border-box;
     text-align: center;
     left: 0;
-    font-size: 20px;
+    font-size: 18px;
     flex-direction: column;
     justify-content: center;
-    line-height: 1;
+    line-height: 1.2;
+    h1 {
+      line-height: 1.2;
+    }
     .singer {
-      font-size: 16px;
-      margin-top: 4px;
+      font-size: 14px;
+      margin-top: 2px;
     }
   }
 

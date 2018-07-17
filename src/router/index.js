@@ -9,6 +9,7 @@ import SingerDetail from '@/components/SingerDetail'
 import RankDetail from '@/components/RankDetail'
 import Mv from '@/components/Mv'
 import Search from '@/components/Search'
+import DailyRecommend from '@/components/DailyRecommend'
 // import BaseNav from '@/base/BaseNav'
 
 Vue.use(Router)
@@ -41,6 +42,10 @@ export default new Router({
           path: ':id',
           component: SingerDetail
         }]
+      }, {
+        path: '/dailyRecommend',
+        name: 'dailyRecommend',
+        component: DailyRecommend
       }]
     }, {
       path: '/mv',

@@ -22,3 +22,10 @@ export const getRecommendDetail = id => {
     return Promise.resolve(res)
   })
 }
+
+// 每日推荐
+export const getDailyRecommond = () => {
+  return axios.get(url + '/recommend/songs', {}).then(res => {
+    return Promise.resolve(res)
+  })
+}

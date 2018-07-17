@@ -1,6 +1,6 @@
 <template>
   <transition name="rank-detail">
-    <music-list :title="title" :list="list" :bgImg="bgImg"></music-list>
+    <music-list :name="name" :list="list" :bgImg="bgImg" title="榜单"></music-list>
   </transition>
 </template>
 <script>
@@ -14,7 +14,7 @@ export default {
   data () {
     return {
       list: [],
-      title: '',
+      name: '',
       bgImg: ''
     }
   },
@@ -35,7 +35,7 @@ export default {
       this.list = rankListData.songList.map(item => {
         return new Song(item)
       })
-      this.title = rankListData.name
+      this.name = rankListData.name
       this.bgImg = rankListData.coverImgUrl
     }
   },
@@ -46,7 +46,7 @@ export default {
         this.list = item.tracks.map(item => {
           return new Song(item)
         })
-        this.title = item.name
+        this.name = item.name
         this.bgImg = item.coverImgUrl
       })
     }

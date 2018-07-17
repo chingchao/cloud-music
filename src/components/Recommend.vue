@@ -77,7 +77,7 @@ export default {
       }, {
         icon: 'icon-04',
         name: '每日推荐',
-        link: '/rank'
+        link: '/dailyRecommend'
       }, {
         icon: 'icon-liebiao',
         name: '歌单',

@@ -1,6 +1,6 @@
 <template>
   <transition name='slide'>
-    <music-list :title="title" :list="list" :bgImg="bgImg"></music-list>
+    <music-list :name="name" :list="list" :bgImg="bgImg" title="歌单"></music-list>
   </transition>
 </template>
 <script>
@@ -11,7 +11,7 @@ export default {
   name: 'SongSheet',
   data () {
     return {
-      title: '',
+      name: '',
       list: [],
       bgImg: ''
     }
@@ -29,7 +29,7 @@ export default {
         this.list = res.data.playlist.tracks.map(item => {
           return new Song(item)
         })
-        this.title = res.data.playlist.name
+        this.name = res.data.playlist.name
         this.bgImg = res.data.playlist.coverImgUrl
       })
     }

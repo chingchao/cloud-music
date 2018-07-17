@@ -1,14 +1,14 @@
 <template>
   <transition name='slide'>
     <child-wrap>
-      <Title v-if="list.length" title='歌单' :colorType="bgImg ? 1 : 0"/>
+      <Title v-if="list.length" :title='title' :colorType="bgImg ? 1 : 0"/>
       <div class="info-wrap pr bg-white" ref="info">
         <div class="black-bg pa"></div>
         <img class="bg-img pa" v-if="bgImg" v-lazy="bgImg" alt="">
         <div class="info flex pa">
           <img class="cover" v-if="bgImg" v-lazy="bgImg" alt="">
           <div class="color-white">
-            <span class="title-text">{{title}}</span>
+            <span class="title-text">{{name}}</span>
           </div>
         </div>
       </div>
@@ -42,12 +42,12 @@ import Scroll from '@/base/Scroll'
 import Loading from '@/base/Loading'
 import {mapActions} from 'vuex'
 
-const MIN_HEIGHT = 56
+const MIN_HEIGHT = 48
 
 export default {
   name: 'MusicList',
   props: {
-    title: {
+    name: {
       type: String,
       default: ''
     },
@@ -58,6 +58,10 @@ export default {
     bgImg: {
       type: String,
       default: ''
+    },
+    title: {
+      type: String,
+      default: '歌单'
     }
   },
   data () {
