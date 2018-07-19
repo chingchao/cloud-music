@@ -13,7 +13,7 @@ const state = {
   fullScreen: false,
   // 播放列表
   playList: [],
-  // 顺序列表
+  // 原始列表
   sequenceList: [],
   // 播放模式（顺序/随机）
   mode: playMode.sequence,

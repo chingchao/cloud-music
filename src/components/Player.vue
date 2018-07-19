@@ -73,6 +73,7 @@
 <script>
 import {mapGetters, mapMutations} from 'vuex'
 import {playMode} from '@/common/js/config'
+import {shuffle} from '@/common/js/util'
 export default {
   data () {
     return {
@@ -98,7 +99,7 @@ export default {
     iconMode () {
       return this.mode === playMode.sequence ? 'icon-xunhuanbofang' : this.mode === playMode.loop ? 'icon-danquxunhuan' : 'icon-suijibofang'
     },
-    ...mapGetters(['playing', 'fullScreen', 'playList', 'currentSong', 'currentIndex', 'mode'])
+    ...mapGetters(['playing', 'fullScreen', 'playList', 'currentSong', 'currentIndex', 'mode', 'sequenceList'])
   },
   mounted () {
     console.log(this.currentSong)
@@ -129,7 +130,12 @@ export default {
       this.percent = this.currentTime / this.duration
     },
     ended () {
-      this.changeSong(1)
+      if (this.mode === 1) {
+        this.$refs.audio.currentTime = 0
+        this.$refs.audio.play()
+      } else {
+        this.changeSong(1)
+      }
     },
     // 格式化时间
     format (time) {
@@ -164,16 +170,34 @@ export default {
       this.touch.init = false
       this._getPercent(e.changedTouches[0].clientX)
     },
+
     // 切换播放模式
     changeMode () {
       const mode = (this.mode + 1) % 3
       this.setPlayMode(mode)
+      let list = []
+      if (this.mode === playMode.random) {
+        list = shuffle(this.sequenceList)
+      } else {
+        list = this.sequenceList
+      }
+      this.setPlayList(list)
+      this.setCurrentIndexFn(list)
+    },
+    // 切换模式后重设当前播放的歌曲
+    setCurrentIndexFn (list) {
+      let index = list.findIndex(item => {
+        return item.id === this.currentSong.id
+      })
+      this.setCurrentIndex(index)
+      this.play(true)
     },
     ...mapMutations({
       setFullScreen: 'SET_FULL_SCREEN',
       play: 'SET_PLAYING_STATE',
       setCurrentIndex: 'SET_CURRENT_INDEX',
-      setPlayMode: 'SET_PLAY_MODE'
+      setPlayMode: 'SET_PLAY_MODE',
+      setPlayList: 'SET_PLAYLIST'
     })
   },
   watch: {
@@ -260,6 +284,7 @@ export default {
     overflow: hidden;
     img {
       width: 250px;
+      height: 250px;
     }
   }
   .small-screen {
