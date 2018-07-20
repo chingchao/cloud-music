@@ -11,12 +11,19 @@
         </div>
       </div>
       <div class="play-content w100p pr flex">
-        <div class="band flex">
-          <div class="img-wrap flex">
-            <img :src="currentSong.img" alt="">
+        <slider class="flex w100p" :autoPlay="autoPlay">
+          <div class="band flex">
+            <div class="img-wrap flex">
+              <img :src="currentSong.img" alt="">
+            </div>
+            <p class="playing-lyric">此歌曲为没有填词的纯音乐，请您欣赏</p>
           </div>
-          <p class="playing-lyric">此歌曲为没有填词的纯音乐，请您欣赏</p>
-        </div>
+          <div class="lyric-wrap w100p">
+            <ul>
+              <li :class="{active: lyricIndex == index}" v-for="(item, index) in lyricArr" :key="item.time + item.text">{{item.text}}</li>
+            </ul>
+          </div>
+        </slider>
       </div>
       <div class="fotter flex w100p pr">
         <div class="progress-wrap flex w100p">
@@ -72,8 +79,10 @@
 </template>
 <script>
 import {mapGetters, mapMutations} from 'vuex'
+import Slider from '@/base/Slider'
 import {playMode} from '@/common/js/config'
 import {shuffle} from '@/common/js/util'
+import {getLyric} from '@/api/player'
 export default {
   data () {
     return {
@@ -82,12 +91,16 @@ export default {
       currentTime: 0,
       duration: 0,
       // 进度
-      percent: 0
+      percent: 0,
+      lyricArr: [],
+      lyricIndex: -1
     }
   },
   created () {
     // 进度条点击/拖动 存放数据
     this.touch = {}
+    // 歌词显示自动切换
+    this.autoPlay = false
   },
   computed: {
     progressWidth () {
@@ -102,7 +115,10 @@ export default {
     ...mapGetters(['playing', 'fullScreen', 'playList', 'currentSong', 'currentIndex', 'mode', 'sequenceList'])
   },
   mounted () {
-    console.log(this.currentSong)
+    // console.log(this.currentSong)
+  },
+  components: {
+    Slider
   },
   methods: {
     closePlayer () {
@@ -128,6 +144,7 @@ export default {
       // 如果在拖动进度条，不改变进度条宽度
       if (this.touch.init) return false
       this.percent = this.currentTime / this.duration
+      // this.getActiveIndex()
     },
     ended () {
       if (this.mode === 1) {
@@ -192,6 +209,26 @@ export default {
       this.setCurrentIndex(index)
       this.play(true)
     },
+    // 将歌词时间格式化成秒
+    formatTime (str) {
+      let time = str.substring(1).split(':')
+      return (time[0] | 0) * 60 + Number(time[1])
+    },
+    // 计算歌词高亮索引
+    getActiveIndex () {
+      if (this.lyricIndex === -1) {
+        for (let i = 0; i < this.lyricArr.length; i++) {
+          if (this.lyricArr[i].time >= this.currentTime && this.lyricArr[i + 1].time < this.currentTime) {
+            this.lyricIndex = i
+            return false
+          }
+        }
+      } else {
+        if (this.lyricArr[this.lyricIndex + 1] && this.lyricArr[this.lyricIndex + 1].time >= this.currentTime) {
+          this.lyricIndex++
+        }
+      }
+    },
     ...mapMutations({
       setFullScreen: 'SET_FULL_SCREEN',
       play: 'SET_PLAYING_STATE',
@@ -204,6 +241,24 @@ export default {
     currentSong () {
       this.$nextTick(() => {
         this.$refs.audio.play()
+      })
+      getLyric(this.currentSong.id).then(res => {
+        console.log(res)
+        if (res.data.code !== 200) {
+          this.lyricArr = []
+          return false
+        }
+        let lyric = res.data.lrc.lyric.replace(/^[\s\n]|[\s\n]$/, '')
+        lyric = lyric.substring(lyric.indexOf('[00:'))
+        this.lyricArr = lyric.split('\n').map(item => {
+          let n = item.lastIndexOf('[')
+          let m = item.lastIndexOf(']')
+          return {
+            time: this.formatTime(item.substring(n - 1, m)),
+            text: item.substring(m + 1)
+          }
+        })
+        console.log(this.lyricArr)
       })
     },
     playing (newPlaying) {
@@ -243,6 +298,7 @@ export default {
   .title {
     height: 48px;
     line-height: 48px;
+    flex-shrink: 0;
   }
   .icon-xiangxia-copy {
     padding: 0 18px;
@@ -324,6 +380,19 @@ export default {
     padding: 0 10px;
     margin-top: 30px;
   }
+  .lyric-wrap {
+    overflow: hidden;
+    text-align: center;
+    padding: 20px 20px 0;
+    box-sizing: border-box;
+    li {
+      margin: 10px 0;
+      line-height: 1.3;
+    }
+    li.active {
+      color: #dd4137;
+    }
+  }
 
   .fotter {
     height: 160px;
@@ -331,6 +400,7 @@ export default {
     box-sizing: border-box;
     flex-direction: column;
     justify-content: center;
+    flex-shrink: 0;
   }
   .progress-wrap {
     margin-bottom: 26px;
