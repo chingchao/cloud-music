@@ -16,7 +16,7 @@
             <div class="img-wrap flex">
               <img :src="currentSong.img" alt="">
             </div>
-            <p class="playing-lyric">{{lyricText}}</p>
+            <p class="playing-lyric">{{lyricText || currentSong.name}}</p>
           </div>
           <div class="lyric-wrap w100p">
             <scroll ref="lyricList" class="lyric-scroll" :data="currentLyric && currentLyric.lines">
@@ -250,8 +250,8 @@ export default {
           this.lyricIndex = lineNum
           this.lyricText = txt
           if (!this.fullScreen) return false
-          if (lineNum > 5) {
-            let lineEl = this.$refs.lyricLine[lineNum - 5]
+          if (lineNum > 4) {
+            let lineEl = this.$refs.lyricLine[lineNum - 4]
             this.$refs.lyricList.scrollToElement(lineEl, 1000)
           } else {
             this.$refs.lyricList.scrollTo(0, 0, 1000)

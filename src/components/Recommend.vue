@@ -29,22 +29,8 @@
         <div v-show="recommend.length">
           <type-title title="精品歌单"/>
           <ul>
-            <li class='recommend-i flex' v-for="item in recommend" :key="item.id" @click="getDetail(item.id)">
-              <div class="img-wrap pr">
-                <img class='item-img h100p pa' v-lazy="item.img" alt="">
-                <p class='pa play-count'>
-                  <i class='iconfont icon-headseterji'></i>
-                  <span>{{count(item.playCount)}}</span>
-                </p>
-              </div>
-              <div class='info flex'>
-                <p class='title'>{{item.name}}</p>
-                <p class='creator'>by {{item.creator}}</p>
-                <p>
-                  <span class='color-theme border-theme tag'>{{item.tag}}</span>
-                  <span class='des'>{{item.des}}</span>
-                </p>
-              </div>
+            <li v-for="item in recommend" :key="item.id" @click="getDetail(item.id)">
+              <song-sheet-item :item="item"/>
             </li>
           </ul>
         </div>
@@ -62,6 +48,7 @@ import Scroll from '@/base/Scroll'
 import Slider from '@/base/Slider'
 import Loading from '@/base/Loading'
 import TypeTitle from '@/base/TypeTitle'
+import SongSheetItem from '@/base/SongSheetItem'
 import {playListMixin} from '@/common/js/mixin'
 
 export default {
@@ -83,7 +70,7 @@ export default {
       }, {
         icon: 'icon-liebiao',
         name: '歌单',
-        link: '/rank'
+        link: '/songSheet'
       }, {
         icon: 'icon-paixingbang',
         name: '排行榜',
@@ -95,7 +82,8 @@ export default {
     Scroll,
     Slider,
     Loading,
-    TypeTitle
+    TypeTitle,
+    SongSheetItem
   },
   created () {
     this._getBanner()
@@ -132,9 +120,6 @@ export default {
         path: '/recommend/' + id
       })
     },
-    count: function (playCount) {
-      return playCount > 10000 ? Math.floor(playCount / 10000) + '万' : playCount
-    },
     // 当有一张图片加载，重新调用 scroll 组件的 refresh 方法，重新计算滚动高度
     loadImage () {
       if (!this.checkLoad) {
@@ -166,48 +151,6 @@ export default {
     bottom: 0;
     width: 100%;
   }
-  .img-wrap {
-    width: 90px;
-    margin-right: 10px;
-    flex-shrink: 0;
-  }
-  .recommend-i {
-    height: 90px;
-    padding: 10px;
-    box-sizing: content-box;
-    align-items: stretch;
-    border-bottom: 1px solid #ddd;
-    .title {
-      padding: 6px 0 0;
-    }
-    .creator, .tag, .des {
-      font-size: 12px;
-    }
-    .creator {
-      margin: 6px 0;
-    }
-    .info {
-      height: 100%;
-      flex-direction: column;
-      justify-content: space-around;
-      align-items: flex-start;
-      flex-grow: 1;
-    }
-  }
-  .play-count {
-    color: #fff;
-    font-size: 12px;
-    right: 0;
-    top: 0;
-    text-align: right;
-    width: 100%;
-    padding: 4px 4px 10px;
-    background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0));
-    .iconfont {
-      font-size: 12px;
-    }
-  }
-
   .banner {
     img {
       width: 100%;
