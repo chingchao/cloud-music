@@ -62,9 +62,11 @@ import Scroll from '@/base/Scroll'
 import Slider from '@/base/Slider'
 import Loading from '@/base/Loading'
 import TypeTitle from '@/base/TypeTitle'
+import {playListMixin} from '@/common/js/mixin'
 
 export default {
   name: 'Recommend',
+  mixins: [playListMixin],
   data () {
     return {
       recommend: [],
@@ -139,6 +141,13 @@ export default {
         this.$refs.scroll.refresh()
         this.checkLoad = true
       }
+    },
+    // minxin 中调用的方法，有歌曲播放时，重新设置页面底部高度
+    handlePlaylist (playList) {
+      const bottom = playList.length > 0 ? '50px' : ''
+      this.$refs.scroll.$el.style.bottom = bottom
+      this.$refs.scroll.refresh()
+      console.log('123')
     }
   }
 }
@@ -151,8 +160,11 @@ export default {
     width: 100%;
   }
   .recommend-content {
-    height: 100%;
+    position: absolute;
     overflow: hidden;
+    top: 0;
+    bottom: 0;
+    width: 100%;
   }
   .img-wrap {
     width: 90px;

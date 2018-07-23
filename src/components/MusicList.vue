@@ -40,12 +40,14 @@ import MusicItem from '@/components/MusicItem'
 import Title from '@/base/Title'
 import Scroll from '@/base/Scroll'
 import Loading from '@/base/Loading'
+import {playListMixin} from '@/common/js/mixin'
 import {mapActions} from 'vuex'
 
 const MIN_HEIGHT = 48
 
 export default {
   name: 'MusicList',
+  mixins: [playListMixin],
   props: {
     name: {
       type: String,
@@ -98,6 +100,12 @@ export default {
         list: this.list,
         index
       })
+    },
+    // minxin 中调用的方法，有歌曲播放时，重新设置页面底部高度
+    handlePlaylist (playList) {
+      const bottom = playList.length > 0 ? '50px' : ''
+      this.$refs.scroll.$el.style.bottom = bottom
+      this.$refs.scroll.refresh()
     },
     ...mapActions([
       'selectPlay'

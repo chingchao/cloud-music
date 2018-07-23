@@ -11,17 +11,21 @@
         </div>
       </div>
       <div class="play-content w100p pr flex">
-        <slider class="flex w100p" :autoPlay="autoPlay">
+        <slider class="flex w100p play-slider" :autoPlay="autoPlay">
           <div class="band flex">
             <div class="img-wrap flex">
               <img :src="currentSong.img" alt="">
             </div>
-            <p class="playing-lyric">此歌曲为没有填词的纯音乐，请您欣赏</p>
+            <p class="playing-lyric">{{lyricText}}</p>
           </div>
           <div class="lyric-wrap w100p">
-            <ul>
-              <li :class="{active: lyricIndex == index}" v-for="(item, index) in lyricArr" :key="item.time + item.text">{{item.text}}</li>
-            </ul>
+            <scroll ref="lyricList" class="lyric-scroll" :data="currentLyric && currentLyric.lines">
+              <div>
+                <ul v-if="currentLyric">
+                  <li ref="lyricLine" :class="{active: lyricIndex == index}" v-for="(item, index) in currentLyric.lines" :key="item.txt + index">{{item.txt}}</li>
+                </ul>
+              </div>
+            </scroll>
           </div>
         </slider>
       </div>
@@ -80,6 +84,8 @@
 <script>
 import {mapGetters, mapMutations} from 'vuex'
 import Slider from '@/base/Slider'
+import Scroll from '@/base/Scroll'
+import Lyric from 'lyric-parser'
 import {playMode} from '@/common/js/config'
 import {shuffle} from '@/common/js/util'
 import {getLyric} from '@/api/player'
@@ -92,8 +98,9 @@ export default {
       duration: 0,
       // 进度
       percent: 0,
-      lyricArr: [],
-      lyricIndex: -1
+      lyricIndex: -1,
+      lyricText: '',
+      currentLyric: null
     }
   },
   created () {
@@ -118,7 +125,8 @@ export default {
     // console.log(this.currentSong)
   },
   components: {
-    Slider
+    Slider,
+    Scroll
   },
   methods: {
     closePlayer () {
@@ -147,7 +155,7 @@ export default {
       // this.getActiveIndex()
     },
     ended () {
-      if (this.mode === 1) {
+      if (this.mode === playMode.loop) {
         this.$refs.audio.currentTime = 0
         this.$refs.audio.play()
       } else {
@@ -172,6 +180,10 @@ export default {
       this.currentTime = this.duration * percent
       if (!this.touch.init) {
         this.$refs.audio.currentTime = this.currentTime
+        this.play(true)
+      }
+      if (this.currentLyric) {
+        this.currentLyric.seek(this.currentTime * 1000)
       }
     },
     progressStart (e) {
@@ -209,26 +221,6 @@ export default {
       this.setCurrentIndex(index)
       this.play(true)
     },
-    // 将歌词时间格式化成秒
-    formatTime (str) {
-      let time = str.substring(1).split(':')
-      return (time[0] | 0) * 60 + Number(time[1])
-    },
-    // 计算歌词高亮索引
-    getActiveIndex () {
-      if (this.lyricIndex === -1) {
-        for (let i = 0; i < this.lyricArr.length; i++) {
-          if (this.lyricArr[i].time >= this.currentTime && this.lyricArr[i + 1].time < this.currentTime) {
-            this.lyricIndex = i
-            return false
-          }
-        }
-      } else {
-        if (this.lyricArr[this.lyricIndex + 1] && this.lyricArr[this.lyricIndex + 1].time >= this.currentTime) {
-          this.lyricIndex++
-        }
-      }
-    },
     ...mapMutations({
       setFullScreen: 'SET_FULL_SCREEN',
       play: 'SET_PLAYING_STATE',
@@ -242,23 +234,32 @@ export default {
       this.$nextTick(() => {
         this.$refs.audio.play()
       })
+      if (this.currentLyric) {
+        this.currentLyric.stop()
+      }
       getLyric(this.currentSong.id).then(res => {
         console.log(res)
-        if (res.data.code !== 200) {
-          this.lyricArr = []
+        if (res.data.code !== 200 || !res.data.lrc) {
+          this.currentLyric = null
+          this.lyricText = ''
+          this.lyricIndex = 0
           return false
         }
-        let lyric = res.data.lrc.lyric.replace(/^[\s\n]|[\s\n]$/, '')
-        lyric = lyric.substring(lyric.indexOf('[00:'))
-        this.lyricArr = lyric.split('\n').map(item => {
-          let n = item.lastIndexOf('[')
-          let m = item.lastIndexOf(']')
-          return {
-            time: this.formatTime(item.substring(n - 1, m)),
-            text: item.substring(m + 1)
+        this.currentLyric = new Lyric(res.data.lrc.lyric, ({lineNum, txt}) => {
+          console.log({lineNum, txt})
+          this.lyricIndex = lineNum
+          this.lyricText = txt
+          if (!this.fullScreen) return false
+          if (lineNum > 5) {
+            let lineEl = this.$refs.lyricLine[lineNum - 5]
+            this.$refs.lyricList.scrollToElement(lineEl, 1000)
+          } else {
+            this.$refs.lyricList.scrollTo(0, 0, 1000)
           }
         })
-        console.log(this.lyricArr)
+        if (this.currentLyric) {
+          this.currentLyric.play()
+        }
       })
     },
     playing (newPlaying) {
@@ -266,6 +267,9 @@ export default {
         const audio = this.$refs.audio
         newPlaying ? audio.play() : audio.pause()
       })
+      if (this.currentLyric) {
+        this.currentLyric.togglePlay()
+      }
     }
   }
 }
@@ -327,6 +331,9 @@ export default {
     flex-direction: column;
     justify-content: center;
   }
+  .play-slider {
+    flex-grow: 1;
+  }
   .band {
     height: 100%;
     flex-direction: column;
@@ -349,9 +356,9 @@ export default {
     height: 50px;
     color: #666;
     img {
-      width: 36px;
-      height: 36px;
-      border-radius: 3px;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
     }
     .info {
       flex: 1;
@@ -365,6 +372,7 @@ export default {
     .singer {
       color: #999;
       font-size: 14px;
+      margin-top: 4px;
     }
     .circle-bar {
       stroke: #dd4137;
@@ -383,15 +391,24 @@ export default {
   .lyric-wrap {
     overflow: hidden;
     text-align: center;
-    padding: 20px 20px 0;
+    padding: 0 20px 0;
     box-sizing: border-box;
     li {
-      margin: 10px 0;
+      padding: 10px 0;
       line-height: 1.3;
+      color: #ddd;
+      font-size: 14px;
+      transition: .3s;
     }
     li.active {
-      color: #dd4137;
+      color: #fff;
+      font-size: 16px;
     }
+  }
+  .lyric-scroll {
+    flex: 1;
+    height: 380px;
+    overflow: hidden;
   }
 
   .fotter {

@@ -41,10 +41,12 @@ import Title from '@/base/Title'
 import Scroll from '@/base/Scroll'
 import TypeTitle from '@/base/TypeTitle'
 import Loading from '@/base/Loading'
+import {playListMixin} from '@/common/js/mixin'
 import {mapMutations} from 'vuex'
 
 export default {
   name: 'Rank',
+  mixins: [playListMixin],
   data () {
     return {
       /* "0": 云音乐新歌榜,
@@ -122,6 +124,12 @@ export default {
       })
       // 全球榜需要到详情页在发请求
       this.setRankDetail(this.rankList[idx] || {id: idx})
+    },
+    // minxin 中调用的方法，有歌曲播放时，重新设置页面底部高度
+    handlePlaylist (playList) {
+      const bottom = playList.length > 0 ? '50px' : ''
+      this.$refs.scroll.$el.style.bottom = bottom
+      this.$refs.scroll.refresh()
     },
     ...mapMutations({
       setRankDetail: 'SET_RANK_DETAIL'

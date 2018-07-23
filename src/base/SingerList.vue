@@ -161,6 +161,9 @@ export default {
         height = list[i].clientHeight + height
         this.listHeight.push(height)
       }
+    },
+    refresh () {
+      this.$refs.singerList.refresh()
     }
   }
 }

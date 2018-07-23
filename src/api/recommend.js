@@ -29,3 +29,10 @@ export const getDailyRecommond = () => {
     return Promise.resolve(res)
   })
 }
+
+// 歌单
+export const getSongSheet = () => {
+  return axios.get(url + '/top/playlist', {}).then(res => {
+    return Promise.resolve(res)
+  })
+}

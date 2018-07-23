@@ -2,7 +2,7 @@
   <transition name="singer">
     <child-wrap>
       <Title title="歌手"/>
-      <singer-list class="singer-wrap" :v-if="singers.length" :singers="singers" @select="selectSinger"></singer-list>
+      <singer-list ref="list" class="singer-wrap" :v-if="singers.length" :singers="singers" @select="selectSinger"></singer-list>
       <div class="loading-container pa" v-show="!singers.length">
         <loading/>
       </div>
@@ -17,6 +17,7 @@ import ChildWrap from '@/base/ChildWrap'
 import Title from '@/base/Title'
 import Loading from '@/base/Loading'
 import pinyin from 'pinyin'
+import {playListMixin} from '@/common/js/mixin'
 import {mapMutations} from 'vuex'
 
 const HOT_NAME = '热门'
@@ -24,6 +25,7 @@ const HOT_LEN = 10
 
 export default {
   name: 'Singer',
+  mixins: [playListMixin],
   data () {
     return {
       singers: []
@@ -95,6 +97,12 @@ export default {
         picUrl: item.picUrl,
         id: item.id
       }
+    },
+    // minxin 中调用的方法，有歌曲播放时，重新设置页面底部高度
+    handlePlaylist (playList) {
+      const bottom = playList.length > 0 ? '50px' : ''
+      this.$refs.list.$el.style.bottom = bottom
+      this.$refs.list.refresh()
     },
     ...mapMutations({
       setSinger: 'SET_SINGER'
