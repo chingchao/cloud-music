@@ -32,7 +32,7 @@ export const getDailyRecommond = () => {
 
 // 歌单
 export const getSongSheet = () => {
-  return axios.get(url + '/top/playlist', {limit: 100}).then(res => {
+  return axios.get(url + '/top/playlist?limit=100', {}).then(res => {
     return Promise.resolve(res)
   })
 }

@@ -1,13 +1,13 @@
 <template>
   <transition name="search">
     <child-wrap>
-      <Title ref="searchNode" type="input" @search="search"/>
+      <Title ref="searchNode" type="input" @search="search" :query="query"/>
       <scroll class='search-wrap'>
         <div>
           <div class="hot-wrap">
             <p class="text color-gray">热门搜索</p>
             <ul class="flex hot-search">
-              <li class="hot-item" v-for="(item, index) in hotSearchList" :key="index">{{item.first}}</li>
+              <li class="hot-item" v-for="(item, index) in hotSearchList" :key="index" @click="addQuery(item.first)">{{item.first}}</li>
             </ul>
           </div>
           <ul class="history-list">
@@ -38,7 +38,8 @@ export default {
   data () {
     return {
       hotSearchList: [],
-      historyList: ['Ronghao Lee', 'Selina']
+      historyList: ['Ronghao Lee', 'Selina'],
+      query: ''
     }
   },
   components: {
@@ -83,10 +84,16 @@ export default {
         this.hotSearchList = res.data.result.hots
       })
     },
+    addQuery (query) {
+      // this.inputNode.value = query
+      this.query = query
+      this.search(query)
+    },
     search (k) {
       if (!k) {
         k = this.hotSearchList[0] ? this.hotSearchList[0].first : ''
-        this.inputNode.value = this.placeholder
+        // this.inputNode.value = this.placeholder
+        this.query = this.placeholder
       }
       if (!k) return false
       searchFn(k).then(res => {
@@ -110,7 +117,7 @@ export default {
   .search-wrap {
     overflow: hidden;
     position: absolute;
-    top:48;
+    top: 48px;
     bottom: 0;
     width: 100%;
   }

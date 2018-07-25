@@ -31,11 +31,15 @@ export default {
     type: {
       type: String,
       default: ''
+    },
+    query: {
+      type: String,
+      default: ''
     }
   },
   data () {
     return {
-      keyWords: ''
+      keyWords: this.query
     }
   },
   computed: {
@@ -55,7 +59,11 @@ export default {
     },
     searchFn () {
       this.$emit('search', this.keyWords)
-      // this.
+    }
+  },
+  watch: {
+    query (newQuery) {
+      this.keyWords = newQuery
     }
   }
 }
