@@ -64,6 +64,11 @@ export default {
   watch: {
     query (newQuery) {
       this.keyWords = newQuery
+    },
+    keyWords (newK) {
+      if (newK === '') {
+        this.$emit('search', '')
+      }
     }
   }
 }

@@ -1,7 +1,7 @@
 <template>
   <div class='music-item flex' @click="selectSong">
-    <span class='order color-gray'>{{index}}</span>
-    <div class='flex-grow flex info border-b'>
+    <span v-if="index" class='order color-gray'>{{index}}</span>
+    <div class='flex-grow flex info border-b' :class="{'search-p': !index}">
       <div class='flex-grow'>
         <p class='name'>{{item.name}}</p>
         <span class='singer color-gray'>{{item.singers}} - {{item.al_name}}</span>
@@ -45,6 +45,10 @@ export default {
     margin-bottom: 6px;
   }
   .info {
-    padding: 14px 0 10px;
+    padding-top: 14px;
+    padding-bottom: 10px;
+  }
+  .search-p {
+    padding-left: 14px;
   }
 </style>

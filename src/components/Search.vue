@@ -2,21 +2,28 @@
   <transition name="search">
     <child-wrap>
       <Title ref="searchNode" type="input" @search="search" :query="query"/>
-      <scroll class='search-wrap'>
+      <scroll ref="scroll" class='search-wrap'>
         <div>
-          <div class="hot-wrap">
-            <p class="text color-gray">热门搜索</p>
-            <ul class="flex hot-search">
-              <li class="hot-item" v-for="(item, index) in hotSearchList" :key="index" @click="addQuery(item.first)">{{item.first}}</li>
+          <div v-if="!searchResult.length">
+            <div class="hot-wrap">
+              <p class="text color-gray">热门搜索</p>
+              <ul class="flex hot-search">
+                <li class="hot-item" v-for="(item, index) in hotSearchList" :key="index" @click="addQuery(item.first)">{{item.first}}</li>
+              </ul>
+            </div>
+            <ul v-if="historyList.length" class="history-list">
+              <li class="flex" v-for="(item, index) in historyList" :key="item">
+                <i class="iconfont icon-jilu color-gray"></i>
+                <p class="text flex border-b">
+                  <span>{{item}}</span>
+                  <i class="iconfont icon-cha color-gray delete-icon" @click="deleteHistory(index)"></i>
+                </p>
+              </li>
             </ul>
           </div>
-          <ul class="history-list">
-            <li class="flex" v-for="item in historyList" :key="item">
-              <i class="iconfont icon-jilu color-gray"></i>
-              <p class="text flex border-b">
-                <span>{{item}}</span>
-                <i class="iconfont icon-cha color-gray delete-icon"></i>
-              </p>
+          <ul v-else>
+            <li v-for="(item, index) in searchResult" :key="item.id">
+              <music-item :item='item' @selectItem="selectSong(item, index)"/>
             </li>
           </ul>
         </div>
@@ -28,25 +35,32 @@
   </transition>
 </template>
 <script>
+import {SearchSong} from '@/common/js/song'
 import ChildWrap from '@/base/ChildWrap'
 import Title from '@/base/Title'
 import Scroll from '@/base/Scroll'
 import Loading from '@/base/Loading'
+import MusicItem from '@/components/MusicItem'
+import {playListMixin} from '@/common/js/mixin'
 import {hotSearch, searchFn} from '@/api/search'
+import {mapActions} from 'vuex'
 export default {
   name: 'Serach',
+  mixins: [playListMixin],
   data () {
     return {
       hotSearchList: [],
-      historyList: ['Ronghao Lee', 'Selina'],
-      query: ''
+      historyList: [],
+      query: '',
+      searchResult: []
     }
   },
   components: {
     ChildWrap,
     Title,
     Scroll,
-    Loading
+    Loading,
+    MusicItem
   },
   created () {
     this._getHotSearch()
@@ -85,21 +99,43 @@ export default {
       })
     },
     addQuery (query) {
-      // this.inputNode.value = query
       this.query = query
       this.search(query)
     },
     search (k) {
       if (!k) {
-        k = this.hotSearchList[0] ? this.hotSearchList[0].first : ''
-        // this.inputNode.value = this.placeholder
-        this.query = this.placeholder
+        // k = this.hotSearchList[0] ? this.hotSearchList[0].first : ''
+        // this.query = this.placeholder
+        this.searchResult = []
       }
       if (!k) return false
       searchFn(k).then(res => {
         console.log(res)
+        this.historyList.unshift(k)
+        this.searchResult = res.data.result.songs.map(item => {
+          return new SearchSong(item)
+        })
       })
-    }
+    },
+    selectSong (item, index) {
+      this.selectPlay({
+        list: this.searchResult,
+        index
+      })
+    },
+    // 删除历史搜索
+    deleteHistory (index) {
+      this.historyList.splice(index, 1)
+    },
+    // minxin 中调用的方法，有歌曲播放时，重新设置页面底部高度
+    handlePlaylist (playList) {
+      const bottom = playList.length > 0 ? '50px' : ''
+      this.$refs.scroll.$el.style.bottom = bottom
+      this.$refs.scroll.refresh()
+    },
+    ...mapActions([
+      'selectPlay'
+    ])
   }
 }
 </script>

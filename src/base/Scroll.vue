@@ -40,6 +40,13 @@ export default {
       type: Number,
       default: 20
     }
+    // 上拉加载
+    // pullUpLoad: {
+    //   type: Object,
+    //   default: {
+    //     threshold: 50
+    //   }
+    // }
   },
   mounted () {
     setTimeout(() => {
