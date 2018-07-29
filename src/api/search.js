@@ -7,8 +7,8 @@ export function hotSearch () {
   })
 }
 
-export function searchFn (keywrods) {
-  return axios.get(url + '/search?keywords=' + keywrods, {}).then(res => {
+export function searchFn (keywrods, pageSize, pageIndex) {
+  return axios.get(url + `/search?keywords=${keywrods}&limit=${pageSize}&offset=${(pageIndex - 1) * pageSize}`, {}).then(res => {
     return Promise.resolve(res)
   })
 }

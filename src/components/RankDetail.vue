@@ -27,8 +27,11 @@ export default {
   created () {
     // 得到的可能是榜单详情，可能只有榜单id
     const rankListData = this.rankList
-    // const rankListData = this.$store.state.rankList
-    console.log(rankListData)
+    if (JSON.stringify(rankListData) === '{}') {
+      window.history.back()
+      return false
+    }
+
     if (!rankListData.name) {
       this._getRankDetail(rankListData.id)
     } else {

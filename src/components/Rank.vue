@@ -157,6 +157,7 @@ export default {
     width: 100px;
     height: 100px;
     margin-right: 10px;
+    flex-shrink: 0;
   }
   .song-list {
     align-items: flex-start;
