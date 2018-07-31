@@ -7,3 +7,10 @@ export const getLyric = id => {
     return Promise.resolve(res)
   })
 }
+
+// 获取专辑详情
+export const getAlbumDetail = id => {
+  return axios.get(url + '/album?id=' + id, {}).then(res => {
+    return Promise.resolve(res)
+  })
+}

@@ -2,7 +2,7 @@
   <div class="player pa w100p" v-if="playList.length">
     <transition name="full">
     <div class="flex w100p color-white full-screen" v-if="fullScreen">
-      <div class="bg-filter pa w100p h100p" :style="{'background-image': 'url(' + currentSong.img + ')'}"></div>
+      <div class="bg-filter pa w100p h100p" :style="{'background-image': 'url(' + album_img + ')'}"></div>
       <div class="title pr w100p">
         <i class="iconfont icon-xiangxia-copy pa" @click="closePlayer"></i>
         <div class="title-text pa w100p ell flex h100p">
@@ -14,7 +14,7 @@
         <slider class="flex w100p play-slider" :autoPlay="autoPlay">
           <div class="band flex">
             <div class="img-wrap flex">
-              <img :src="currentSong.img" alt="">
+              <img :src="album_img" alt="">
             </div>
             <p class="playing-lyric">{{lyricText || currentSong.name}}</p>
           </div>
@@ -63,7 +63,7 @@
     </transition>
     <transition name="mini">
     <div class="flex w100p small-screen bg-white" v-if="!fullScreen" @click="setFullScreen(true)">
-      <img :src="currentSong.img" alt="">
+      <img :src="album_img" alt="">
       <div class="info flex">
         <span class="song-name ell">{{currentSong.name}}</span>
         <span class="singer ell">{{currentSong.singers}}</span>
@@ -88,7 +88,7 @@ import Scroll from '@/base/Scroll'
 import Lyric from 'lyric-parser'
 import {playMode} from '@/common/js/config'
 import {shuffle} from '@/common/js/util'
-import {getLyric} from '@/api/player'
+import {getLyric, getAlbumDetail} from '@/api/player'
 export default {
   data () {
     return {
@@ -96,6 +96,7 @@ export default {
       songReady: false,
       currentTime: 0,
       duration: 0,
+      album_img: '',
       // 进度
       percent: 0,
       lyricIndex: -1,
@@ -237,6 +238,16 @@ export default {
       if (this.currentLyric) {
         this.currentLyric.stop()
       }
+
+      // 搜索列表无专辑图片，需要发请求从专辑详情中获取
+      if (this.currentSong.img) {
+        this.album_img = this.currentSong.img
+      } else {
+        getAlbumDetail(this.currentSong.album_id).then(res => {
+          this.album_img = res.data.album.picUrl
+        })
+      }
+
       getLyric(this.currentSong.id).then(res => {
         console.log(res)
         if (res.data.code !== 200 || !res.data.lrc) {
