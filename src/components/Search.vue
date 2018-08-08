@@ -53,6 +53,7 @@ import MusicItem from '@/components/MusicItem'
 import NoResult from '@/base/NoResult'
 import {playListMixin} from '@/common/js/mixin'
 import {hotSearch, searchFn} from '@/api/search'
+import {saveSearch, loadSearch, addSearch} from '@/common/js/cache'
 import {mapActions} from 'vuex'
 export default {
   name: 'Serach',
@@ -64,9 +65,9 @@ export default {
       pageSize: 30,
       pageIndex: 1,
       hotSearchList: [],
-      historyList: [],
       query: '',
       keyWords: '',
+      historyList: loadSearch(),
       searchResult: [],
       noResult: false,
       beforeScroll: true
@@ -115,7 +116,10 @@ export default {
     _getSearch (k) {
       searchFn(k, this.pageSize, this.pageIndex).then(res => {
         console.log(res)
-        this.historyList = Array.from(new Set([k, ...this.historyList]))
+        // 本地保存搜索记录
+        addSearch(k)
+        this.historyList = loadSearch()
+
         if (!res.data.result.songs) {
           this.noResult = true
           return false
@@ -157,6 +161,7 @@ export default {
     // 删除历史搜索
     deleteHistory (index) {
       this.historyList.splice(index, 1)
+      saveSearch(this.historyList)
     },
     // 上拉加载
     searchMore () {
