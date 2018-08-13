@@ -1,83 +1,84 @@
 <template>
-  <div class="player pa w100p" v-if="playList.length">
+  <div class="player pa w100p" :class="{'t0': fullScreen}" v-if="playList.length">
     <transition name="full">
-    <div class="flex w100p color-white full-screen" v-if="fullScreen">
-      <div class="bg-filter pa w100p h100p" :style="{'background-image': 'url(' + album_img + ')'}"></div>
-      <div class="title pr w100p">
-        <i class="iconfont icon-xiangxia-copy pa" @click="closePlayer"></i>
-        <div class="title-text pa w100p ell flex h100p">
-          <h1 class="w100p ell">{{currentSong.name}}</h1>
-          <span class="w100p ell singer">{{currentSong.singers}}</span>
-        </div>
-      </div>
-      <div class="play-content w100p pr flex">
-        <slider class="flex w100p play-slider" :autoPlay="autoPlay">
-          <div class="band flex">
-            <div class="img-wrap flex">
-              <img :src="album_img" alt="">
-            </div>
-            <p class="playing-lyric">{{lyricText || currentSong.name}}</p>
+      <div class="flex w100p color-white full-screen" v-if="fullScreen">
+        <div class="bg-filter pa w100p h100p" :style="{'background-image': 'url(' + album_img + ')'}"></div>
+        <div class="title pr w100p">
+          <i class="iconfont icon-xiangxia-copy pa" @click="closePlayer"></i>
+          <div class="title-text pa w100p ell flex h100p">
+            <h1 class="w100p ell">{{currentSong.name}}</h1>
+            <span class="w100p ell singer">{{currentSong.singers}}</span>
           </div>
-          <div class="lyric-wrap w100p">
-            <scroll ref="lyricList" class="lyric-scroll" :data="currentLyric && currentLyric.lines">
-              <div>
-                <ul v-if="currentLyric">
-                  <li ref="lyricLine" :class="{active: lyricIndex == index}" v-for="(item, index) in currentLyric.lines" :key="item.txt + index">{{item.txt}}</li>
-                </ul>
+        </div>
+        <div class="play-content w100p pr flex">
+          <slider class="flex w100p play-slider" :autoPlay="autoPlay">
+            <div class="band flex">
+              <div class="img-wrap flex">
+                <img :src="album_img" alt="">
               </div>
-            </scroll>
-          </div>
-        </slider>
-      </div>
-      <div class="fotter flex w100p pr">
-        <div class="progress-wrap flex w100p">
-          <span class="time">{{format(currentTime)}}</span>
-          <div class="bar-wrap"
-            ref="progressBar"
-            @touchstart.prevent="progressStart"
-            @touchmove.prevent="progressMove"
-            @touchend.prevent="progressEnd"
-          >
-            <div class="bar pr">
-              <div class="dib pa progress" :style="{width: progressWidth}">
-                <span class="pa flex">
-                  <i class="bg-theme"></i>
-                </span>
+              <p class="playing-lyric">{{lyricText || currentSong.name}}</p>
+            </div>
+            <div class="lyric-wrap w100p">
+              <scroll ref="lyricList" class="lyric-scroll" :data="currentLyric && currentLyric.lines">
+                <div>
+                  <ul v-if="currentLyric">
+                    <li ref="lyricLine" :class="{active: lyricIndex == index}" v-for="(item, index) in currentLyric.lines" :key="item.txt + index">{{item.txt}}</li>
+                  </ul>
+                </div>
+              </scroll>
+            </div>
+          </slider>
+        </div>
+        <div class="fotter flex w100p pr">
+          <div class="progress-wrap flex w100p">
+            <span class="time">{{format(currentTime)}}</span>
+            <div class="bar-wrap"
+              ref="progressBar"
+              @touchstart.prevent="progressStart"
+              @touchmove.prevent="progressMove"
+              @touchend.prevent="progressEnd"
+            >
+              <div class="bar pr">
+                <div class="dib pa progress" :style="{width: progressWidth}">
+                  <span class="pa flex">
+                    <i class="bg-theme"></i>
+                  </span>
+                </div>
               </div>
             </div>
+            <span class="time">{{format(duration)}}</span>
           </div>
-          <span class="time">{{format(duration)}}</span>
-        </div>
-        <div class="flex w100p">
-          <i class="iconfont" :class="iconMode" @click="changeMode"></i>
-          <div class="oprate flex">
-            <i class="iconfont icon-yduishangyiqu" @click="changeSong(-1)"></i>
-            <i class="iconfont icon-zanting1 center-icon" v-if="playing" @click="play(false)"></i>
-            <i class="iconfont icon-bofang center-icon" v-else @click="play(true)"></i>
-            <i class="iconfont icon-xiayiqu" @click="changeSong(1)"></i>
+          <div class="flex w100p">
+            <i class="iconfont" :class="iconMode" @click="changeMode"></i>
+            <div class="oprate flex">
+              <i class="iconfont icon-yduishangyiqu" @click="changeSong(-1)"></i>
+              <i class="iconfont icon-zanting1 center-icon" v-if="playing" @click="play(false)"></i>
+              <i class="iconfont icon-bofang center-icon" v-else @click="play(true)"></i>
+              <i class="iconfont icon-xiayiqu" @click="changeSong(1)"></i>
+            </div>
+            <i class="iconfont icon-liebiao" @click="showPlayingList"></i>
           </div>
-          <i class="iconfont icon-liebiao"></i>
         </div>
       </div>
-    </div>
     </transition>
     <transition name="mini">
-    <div class="flex w100p small-screen bg-white" v-if="!fullScreen" @click="setFullScreen(true)">
-      <img :src="album_img" alt="">
-      <div class="info flex">
-        <span class="song-name ell">{{currentSong.name}}</span>
-        <span class="singer ell">{{currentSong.singers}}</span>
+      <div class="flex w100p small-screen bg-white" v-if="!fullScreen" @click="setFullScreen(true)">
+        <img :src="album_img" alt="">
+        <div class="info flex">
+          <span class="song-name ell">{{currentSong.name}}</span>
+          <span class="singer ell">{{currentSong.singers}}</span>
+        </div>
+        <div class="pr" @click.stop="play(!playing)">
+          <svg class="pa" width="28" height="28" viewBox="0 0 100 100" version="1.1" xmlns="http://www.w3.org/2000/svg">
+            <circle class="circle-bar pa" r="50" cx="50" cy="50" fill="transparent" stroke-dasharray="314" :stroke-dashoffset="dashOffset"></circle>
+          </svg>
+          <i class="iconfont icon-zanting1 center-icon" v-if="playing"></i>
+          <i class="iconfont icon-bofang center-icon" v-else></i>
+        </div>
+        <i class="iconfont icon-liebiao"></i>
       </div>
-      <div class="pr" @click.stop="play(!playing)">
-        <svg class="pa" width="28" height="28" viewBox="0 0 100 100" version="1.1" xmlns="http://www.w3.org/2000/svg">
-          <circle class="circle-bar pa" r="50" cx="50" cy="50" fill="transparent" stroke-dasharray="314" :stroke-dashoffset="dashOffset"></circle>
-        </svg>
-        <i class="iconfont icon-zanting1 center-icon" v-if="playing"></i>
-        <i class="iconfont icon-bofang center-icon" v-else></i>
-      </div>
-      <i class="iconfont icon-liebiao"></i>
-    </div>
     </transition>
+    <playing-list ref="playingListNode"></playing-list>
     <audio ref="audio" :src="currentSong.url" @canplay="ready" @error="error" @timeupdate="updateTime" @ended="ended"></audio>
   </div>
 </template>
@@ -86,6 +87,7 @@ import {mapGetters, mapMutations} from 'vuex'
 import Slider from '@/base/Slider'
 import Scroll from '@/base/Scroll'
 import Lyric from 'lyric-parser'
+import PlayingList from '@/components/PlayingList'
 import {playMode} from '@/common/js/config'
 import {shuffle} from '@/common/js/util'
 import {getLyric, getAlbumDetail} from '@/api/player'
@@ -127,7 +129,8 @@ export default {
   },
   components: {
     Slider,
-    Scroll
+    Scroll,
+    PlayingList
   },
   methods: {
     closePlayer () {
@@ -221,6 +224,10 @@ export default {
       })
       this.setCurrentIndex(index)
       this.play(true)
+    },
+    // 显示播放列表
+    showPlayingList () {
+      this.$refs.playingListNode.show()
     },
     ...mapMutations({
       setFullScreen: 'SET_FULL_SCREEN',
