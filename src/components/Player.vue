@@ -78,7 +78,7 @@
         <i class="iconfont icon-liebiao"></i>
       </div>
     </transition>
-    <playing-list ref="playingListNode"></playing-list>
+    <playing-list ref="playingListNode" @changeMode="changeMode" :iconMode="iconMode" :list="sequenceList"></playing-list>
     <audio ref="audio" :src="currentSong.url" @canplay="ready" @error="error" @timeupdate="updateTime" @ended="ended"></audio>
   </div>
 </template>
