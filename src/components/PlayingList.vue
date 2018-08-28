@@ -1,27 +1,27 @@
 <template>
   <transition name="list-fade">
-    <div class="play-list pa w100p" @click="hide" v-if="showFlag">
+    <div class="play-list pa w100p" @click="hide" v-show="showFlag">
       <div class="list-wrap pa w100p bg-white flex" @click.stop>
         <div class="list-header w100p flex">
           <div class="header-grow flex">
-            <i class="iconfont play-mode" :class="iconMode" @click="changeMode"></i>
-            <span class="play-num">{{'(' + list.length + ')'}}</span>
+            <i class="iconfont play-mode color-gray" :class="iconMode" @click="changeMode"></i>
+            <span class="play-num">{{'(' + sequenceList.length + ')'}}</span>
           </div>
-          <i class="iconfont icon-shanchu delete-icon"></i>
+          <i class="iconfont icon-shanchu delete-icon color-gray"></i>
         </div>
-        <scroll :data="list" class="list-content">
+        <scroll :data="sequenceList" class="list-content">
           <ul>
-            <li class="flex music-item" v-for="item in list" :key="item.name">
-              <p class="music-name ell">{{item.name}}</p>
-              <div class="icon-wrap">
+            <li class="flex music-item" v-for="item in sequenceList" :key="item.name + item.id">
+              <p class="music-name ell" :class="{'color-theme': item.id === currentSongId}">{{item.name}}</p>
+              <div class="icon-wrap color-theme">
                 <i class="iconfont icon-shoucang like-icon"></i>
                 <i class="icon-cha iconfont"></i>
               </div>
             </li>
           </ul>
         </scroll>
-        <div class="list-footer w100p">
-          <span class="close-list dib">关闭列表</span>
+        <div class="list-footer w100p color-theme">
+          <span class="close-list dib" @click="hide">关闭列表</span>
         </div>
       </div>
     </div>
@@ -37,9 +37,10 @@ export default {
       default: 'icon-xunhuanbofang',
       type: String
     },
-    list: {
-      type: Array,
-      default: () => []
+    sequenceList: Array,
+    currentSongId: {
+      type: Number,
+      required: true
     }
   },
   data () {
@@ -47,8 +48,13 @@ export default {
       showFlag: true
     }
   },
+  computed: {
+    // index() {
+    //   if (this.)
+    // }
+  },
   created () {
-    console.log(this.list)
+    // console.log(this.list)
   },
   components: {
     Scroll
@@ -88,12 +94,10 @@ export default {
     }
     .delete-icon {
       font-size: 22px;
-      color: #666;
     }
     .play-mode {
       font-size: 20px;
       margin-right: 6px;
-      color: #dd4137;
     }
     .play-num {
       font-size: 14px;
@@ -115,7 +119,6 @@ export default {
     }
     .icon-wrap {
       flex-shrink: 0;
-      color: #dd4137;
     }
     .like-icon {
       margin-right: 4px;
@@ -129,7 +132,6 @@ export default {
     padding: 10px 0;
     text-align: center;
     flex-shrink: 0;
-    color: #dd4137;
     font-size: 14px;
     border-top: 1px solid #ddd;
     .close-list {

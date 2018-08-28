@@ -75,10 +75,11 @@
           <i class="iconfont icon-zanting1 center-icon" v-if="playing"></i>
           <i class="iconfont icon-bofang center-icon" v-else></i>
         </div>
+        <!-- <i class="iconfont icon-liebiao" @click.stop="showPlayingList"></i> -->
         <i class="iconfont icon-liebiao"></i>
       </div>
     </transition>
-    <playing-list ref="playingListNode" @changeMode="changeMode" :iconMode="iconMode" :list="sequenceList"></playing-list>
+    <playing-list ref="playingListNode" @changeMode="changeMode" :iconMode="iconMode" :sequenceList="sequenceList" :currentSongId="currentSong.id"></playing-list>
     <audio ref="audio" :src="currentSong.url" @canplay="ready" @error="error" @timeupdate="updateTime" @ended="ended"></audio>
   </div>
 </template>
