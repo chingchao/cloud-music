@@ -41,30 +41,18 @@ export default {
     currentSongId: {
       type: Number,
       required: true
-    }
-  },
-  data () {
-    return {
-      showFlag: true
-    }
-  },
-  computed: {
-    // index() {
-    //   if (this.)
-    // }
-  },
-  created () {
-    // console.log(this.list)
+    },
+    showFlag: Boolean
   },
   components: {
     Scroll
   },
   methods: {
     hide () {
-      this.showFlag = false
+      this.$emit('changeFlag', false)
     },
     show () {
-      this.showFlag = true
+      this.$emit('changeFlag', true)
     },
     changeMode () {
       this.$emit('changeMode')
@@ -77,6 +65,7 @@ export default {
     top: 0;
     bottom: 0;
     z-index: 99;
+    background: rgba(0, 0, 0, 0.5);
   }
   .list-wrap {
     height: 60%;
@@ -139,5 +128,18 @@ export default {
       border-radius: 40px;
       border: 1px solid #dd4137;
     }
+  }
+
+  .list-fade-enter, .list-fade-leave-to {
+    background: transparent;
+  }
+  .list-fade-enter .list-wrap, .list-fade-leave-to .list-wrap {
+    transform: translate3d(0, 100%, 0);
+  }
+  .list-fade-enter-active, .list-fade-leave-active {
+    transition: .5s;
+  }
+  .list-fade-enter-active .list-wrap, .list-fade-leave-active .list-wrap {
+    transition: .5s;
   }
 </style>
