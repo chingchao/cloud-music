@@ -1,6 +1,6 @@
 <template>
   <transition name="list-fade">
-    <div class="play-list pa w100p" @click="hide" v-show="showFlag">
+    <div class="play-list pa w100p" @click="hide" v-if="showFlag">
       <div class="list-wrap pa w100p bg-white flex" @click.stop>
         <div class="list-header w100p flex">
           <div class="header-grow flex">
@@ -9,16 +9,16 @@
           </div>
           <i class="iconfont icon-shanchu delete-icon color-gray"></i>
         </div>
-        <scroll :data="sequenceList" class="list-content">
-          <ul>
-            <li class="flex music-item" v-for="item in sequenceList" :key="item.name + item.id">
+        <scroll ref="palyingListScroll" :data="sequenceList" class="list-content">
+          <transition-group name="list" tag="ul">
+            <li :ref="item.id === currentSongId ? 'currentSongNode' : ''" class="flex music-item" v-for="(item, index) in sequenceList" :key="item.name + item.id" @click="selectSong(index)">
               <p class="music-name ell" :class="{'color-theme': item.id === currentSongId}">{{item.name}}</p>
               <div class="icon-wrap color-theme">
-                <i class="iconfont icon-shoucang like-icon"></i>
-                <i class="icon-cha iconfont"></i>
+                <i class="iconfont icon-shoucang like-icon" @click.stop></i>
+                <i class="icon-cha iconfont" @click.stop="deleteOne(item)"></i>
               </div>
             </li>
-          </ul>
+          </transition-group>
         </scroll>
         <div class="list-footer w100p color-theme">
           <span class="close-list dib" @click="hide">关闭列表</span>
@@ -56,6 +56,22 @@ export default {
     },
     changeMode () {
       this.$emit('changeMode')
+    },
+    selectSong (index) {
+      this.$emit('selectSong', index)
+    },
+    deleteOne (item) {
+      this.$emit('deleteOne', item)
+    }
+  },
+  watch: {
+    showFlag (flag) {
+      console.log(flag)
+      if (flag) {
+        setTimeout(() => {
+          this.$refs.palyingListScroll.scrollToElement(this.$refs.currentSongNode[0], 0)
+        }, 50)
+      }
     }
   }
 }
@@ -95,6 +111,7 @@ export default {
   .list-content {
     flex-grow: 1;
     overflow: hidden;
+    width: 100%;
     ul {
       padding: 6px 16px;
     }
@@ -141,5 +158,11 @@ export default {
   }
   .list-fade-enter-active .list-wrap, .list-fade-leave-active .list-wrap {
     transition: .5s;
+  }
+  .list-enter-active, .list-leave-active {
+    transition: .1s all linear;
+  }
+  .list-leave-to, .list-enter {
+    height: 0;
   }
 </style>

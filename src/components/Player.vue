@@ -23,7 +23,9 @@
                 <scroll ref="lyricList" class="lyric-scroll" :data="currentLyric && currentLyric.lines">
                   <div>
                     <ul v-if="currentLyric">
-                      <li ref="lyricLine" :class="{active: lyricIndex == index}" v-for="(item, index) in currentLyric.lines" :key="item.txt + index">{{item.txt}}</li>
+                      <li ref="lyricLine" :class="{active: lyricIndex == index}" v-for="(item, index) in currentLyric.lines" :key="item.txt + index">
+                        <span>{{item.txt}}</span>
+                      </li>
                     </ul>
                   </div>
                 </scroll>
@@ -88,11 +90,13 @@
       :currentSongId="currentSong.id"
       :showFlag="showFlag"
       @changeFlag="changeFlag"
+      @selectSong="selectSong"
+      @deleteOne="deleteOne"
     />
   </div>
 </template>
 <script>
-import {mapGetters, mapMutations} from 'vuex'
+import {mapGetters, mapMutations, mapActions} from 'vuex'
 import Slider from '@/base/Slider'
 import Scroll from '@/base/Scroll'
 import Lyric from 'lyric-parser'
@@ -244,18 +248,35 @@ export default {
     // 显示隐藏播放列表
     changeFlag (flag) {
       this.showFlag = flag
-      console.log(flag)
     },
+    // 播放列表 切换歌曲
+    selectSong (index) {
+      this.setCurrentIndex(index)
+      this.play(true)
+      this.showFlag = false
+    },
+    // 播放列表 删除歌曲
+    deleteOne (item) {
+      this.deleteSong(item)
+      if (!this.playList.length) {
+        this.showFlag = false
+      }
+    },
+
     ...mapMutations({
       setFullScreen: 'SET_FULL_SCREEN',
       play: 'SET_PLAYING_STATE',
       setCurrentIndex: 'SET_CURRENT_INDEX',
       setPlayMode: 'SET_PLAY_MODE',
       setPlayList: 'SET_PLAYLIST'
-    })
+    }),
+    ...mapActions(['deleteSong'])
   },
   watch: {
-    currentSong () {
+    currentSong (newSong, oldSong) {
+      if (newSong.id === oldSong.id) return
+      if (newSong.id === undefined) return
+
       this.$nextTick(() => {
         this.$refs.audio.play()
       })
@@ -435,9 +456,10 @@ export default {
       font-size: 14px;
       transition: .3s;
     }
-    li.active {
+    li.active span {
       color: #fff;
-      font-size: 16px;
+      display: inline-block;
+      transform: scale(1.3, 1.3);
     }
   }
   .lyric-scroll {
