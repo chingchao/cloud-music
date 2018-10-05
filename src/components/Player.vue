@@ -20,7 +20,13 @@
                 <p class="playing-lyric">{{lyricText || currentSong.name}}</p>
               </div>
               <div class="lyric-wrap w100p">
-                <scroll ref="lyricList" class="lyric-scroll" :data="currentLyric && currentLyric.lines">
+                <scroll ref="lyricList" class="lyric-scroll"
+                  :data="currentLyric && currentLyric.lines"
+                  :scrollStart="true"
+                  :scrollEnd="true"
+                  @scrollStart="moveLyricStart"
+                  @scrollEnd="moveLyricEnd"
+                >
                   <div>
                     <ul v-if="currentLyric">
                       <li ref="lyricLine" :class="{active: lyricIndex == index}" v-for="(item, index) in currentLyric.lines" :key="item.txt + index">
@@ -124,8 +130,10 @@ export default {
   created () {
     // 进度条点击/拖动 存放数据
     this.touch = {}
-    // 歌词显示自动切换
+    // 专辑图片/歌词显示 tab是否自动切换
     this.autoPlay = false
+    // 歌词是否自动定位到当前这一句（手动滑动歌词后不自动定位）
+    this.moveLyric = false
   },
   computed: {
     progressWidth () {
@@ -240,6 +248,18 @@ export default {
       this.setCurrentIndex(index)
       this.play(true)
     },
+
+    // 滑动歌词页面
+    moveLyricStart () {
+      this.moveLyric = true
+      this.moveLyricTimer && (this.moveLyricTimer = null)
+    },
+    moveLyricEnd () {
+      this.moveLyricTimer = setTimeout(() => {
+        this.moveLyric = false
+      }, 3000)
+    },
+
     // 显示播放列表
     showPlayingList () {
       this.showFlag = true
@@ -282,6 +302,9 @@ export default {
       })
       if (this.currentLyric) {
         this.currentLyric.stop()
+        this.lyricIndex = -1
+        this.currentLyric = null
+        this.lyricText = ''
       }
 
       // 搜索列表无专辑图片，需要发请求从专辑详情中获取
@@ -296,9 +319,6 @@ export default {
       getLyric(this.currentSong.id).then(res => {
         console.log(res)
         if (res.data.code !== 200 || !res.data.lrc) {
-          this.currentLyric = null
-          this.lyricText = ''
-          this.lyricIndex = 0
           return false
         }
         this.currentLyric = new Lyric(res.data.lrc.lyric, ({lineNum, txt}) => {
@@ -306,6 +326,7 @@ export default {
           this.lyricIndex = lineNum
           this.lyricText = txt
           if (!this.fullScreen) return false
+          if (this.moveLyric) return false
           if (lineNum > 4) {
             let lineEl = this.$refs.lyricLine[lineNum - 4]
             this.$refs.lyricList.scrollToElement(lineEl, 1000)
@@ -315,6 +336,8 @@ export default {
         })
         if (this.currentLyric) {
           this.currentLyric.play()
+          // 为了让歌词与音频时间一致，需要更新一下
+          this.currentLyric.seek(this.currentTime * 1000)
         }
       })
     },

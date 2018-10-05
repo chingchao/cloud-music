@@ -39,6 +39,14 @@ export default {
     refreshDelay: {
       type: Number,
       default: 20
+    },
+    scrollStart: {
+      type: Boolean,
+      default: false
+    },
+    scrollEnd: {
+      type: Boolean,
+      default: false
     }
   },
   mounted () {
@@ -74,6 +82,18 @@ export default {
       if (this.beforeScroll) {
         this.scroll.on('beforeScrollStart', () => {
           this.$emit('beforeScroll')
+        })
+      }
+
+      if (this.scrollStart) {
+        this.scroll.on('scrollStart', () => {
+          this.$emit('scrollStart')
+        })
+      }
+
+      if (this.scrollEnd) {
+        this.scroll.on('scrollEnd', () => {
+          this.$emit('scrollEnd')
         })
       }
     },
