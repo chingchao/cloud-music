@@ -14,6 +14,7 @@
 <script>
 import BaseNav from '@/base/BaseNav'
 import Player from '@/components/Player'
+
 export default {
   name: 'App',
   components: {
@@ -25,18 +26,18 @@ export default {
 
 <style src='@/common/style/index.less' lang='less'></style>
 
-<style>
-#app {
-  /* font-family: 'Avenir', Helvetica, Arial, sans-serif; */
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  height: 100%;
-}
-.content {
-   flex-grow: 1;
-   width: 100%;
-   overflow: auto;
-   position: relative;
-   z-index: 2;
-}
+<style scoped>
+  #app {
+    /* font-family: 'Avenir', Helvetica, Arial, sans-serif; */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    height: 100%;
+  }
+  .content {
+    flex-grow: 1;
+    width: 100%;
+    overflow: auto;
+    position: relative;
+    z-index: 2;
+  }
 </style>

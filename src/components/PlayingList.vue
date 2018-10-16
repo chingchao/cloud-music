@@ -1,34 +1,38 @@
 <template>
-  <transition name="list-fade">
-    <div class="play-list pa w100p" @click="hide" v-if="showFlag">
-      <div class="list-wrap pa w100p bg-white flex" @click.stop>
-        <div class="list-header w100p flex">
-          <div class="header-grow flex">
-            <i class="iconfont play-mode color-gray" :class="iconMode" @click="changeMode"></i>
-            <span class="play-num">{{'(' + sequenceList.length + ')'}}</span>
+  <div>
+    <transition name="list-fade">
+      <div class="play-list pa w100p" @click="hide" v-if="showFlag">
+        <div class="list-wrap pa w100p bg-white flex" @click.stop>
+          <div class="list-header w100p flex">
+            <div class="header-grow flex">
+              <i class="iconfont play-mode color-gray" :class="iconMode" @click="changeMode"></i>
+              <span class="play-num">{{'(' + sequenceList.length + ')'}}</span>
+            </div>
+            <i class="iconfont icon-shanchu delete-icon color-gray"></i>
           </div>
-          <i class="iconfont icon-shanchu delete-icon color-gray"></i>
-        </div>
-        <scroll ref="palyingListScroll" :data="sequenceList" class="list-content">
-          <transition-group name="list" tag="ul">
-            <li :ref="item.id === currentSongId ? 'currentSongNode' : ''" class="flex music-item" v-for="(item, index) in sequenceList" :key="item.name + item.id" @click="selectSong(index)">
-              <p class="music-name ell" :class="{'color-theme': item.id === currentSongId}">{{item.name}}</p>
-              <div class="icon-wrap color-theme">
-                <i class="iconfont icon-shoucang like-icon" @click.stop></i>
-                <i class="icon-cha iconfont" @click.stop="deleteOne(item)"></i>
-              </div>
-            </li>
-          </transition-group>
-        </scroll>
-        <div class="list-footer w100p color-theme">
-          <span class="close-list dib" @click="hide">关闭列表</span>
+          <scroll ref="palyingListScroll" :data="sequenceList" class="list-content">
+            <transition-group name="list" tag="ul">
+              <li :ref="item.id === currentSongId ? 'currentSongNode' : ''" class="flex music-item" v-for="(item, index) in sequenceList" :key="item.name + item.id" @click="selectSong(index)">
+                <p class="music-name ell" :class="{'color-theme': item.id === currentSongId}">{{item.name}}</p>
+                <div class="icon-wrap color-theme">
+                  <i class="iconfont icon-shoucang like-icon" @click.stop></i>
+                  <i class="icon-cha iconfont" @click.stop="deleteOne(item)"></i>
+                </div>
+              </li>
+            </transition-group>
+          </scroll>
+          <div class="list-footer w100p color-theme">
+            <span class="close-list dib" @click="hide">关闭列表</span>
+          </div>
         </div>
       </div>
-    </div>
-  </transition>
+    </transition>
+    <comfirm ref="confirm" :text="'确定删除？'" @comfirm="comfirmFn"/>
+  </div>
 </template>
 <script>
 import Scroll from '@/base/Scroll'
+import Comfirm from '@/base/Comfirm'
 
 export default {
   name: 'PlayingList',
@@ -45,7 +49,8 @@ export default {
     showFlag: Boolean
   },
   components: {
-    Scroll
+    Scroll,
+    Comfirm
   },
   methods: {
     hide () {
@@ -60,8 +65,15 @@ export default {
     selectSong (index) {
       this.$emit('selectSong', index)
     },
+    comfirmFn () {},
     deleteOne (item) {
-      this.$emit('deleteOne', item)
+      this.$refs.confirm.show()
+      this.comfirmFn = () => {
+        this.$emit('deleteOne', item)
+      }
+    },
+    comfirm (data) {
+      this.deleteOne(data)
     }
   },
   watch: {

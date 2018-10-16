@@ -113,7 +113,7 @@ import {getLyric, getAlbumDetail} from '@/api/player'
 export default {
   data () {
     return {
-      // audio 有一个canplay 事件，表示可以播放了，这是才能去切换歌曲，不然会报错。
+      // audio 有一个canplay 事件，表示可以播放了，这时才能去切换歌曲，不然会报错。
       songReady: false,
       currentTime: 0,
       duration: 0,
@@ -173,6 +173,7 @@ export default {
     },
     error () {
       this.songReady = true
+      console.log('error')
     },
     updateTime (e) {
       this.currentTime = e.target.currentTime
@@ -370,7 +371,7 @@ export default {
     left: 0;
     background: #aaa;
     opacity: 0.5;
-    filter: blur(10px);
+    filter: blur(30px);
     background-size: 100% 100%;
     background-position: center center;
     background-repeat: no-repeat;
