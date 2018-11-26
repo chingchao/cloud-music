@@ -48,6 +48,12 @@ export default {
     },
     showFlag: Boolean
   },
+  data () {
+    return {
+      // 被删除的歌曲
+      deleteItem: {}
+    }
+  },
   components: {
     Scroll,
     Comfirm
@@ -65,15 +71,12 @@ export default {
     selectSong (index) {
       this.$emit('selectSong', index)
     },
-    comfirmFn () {},
-    deleteOne (item) {
-      this.$refs.confirm.show()
-      this.comfirmFn = () => {
-        this.$emit('deleteOne', item)
-      }
+    comfirmFn () {
+      this.$emit('deleteOne', item)
     },
-    comfirm (data) {
-      this.deleteOne(data)
+    deleteOne (item) {
+      this.deleteItem = item
+      this.$refs.confirm.show()
     }
   },
   watch: {
