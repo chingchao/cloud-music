@@ -72,7 +72,7 @@ export default {
       this.$emit('selectSong', index)
     },
     comfirmFn () {
-      this.$emit('deleteOne', item)
+      // this.$emit('deleteOne', item)
     },
     deleteOne (item) {
       this.deleteItem = item

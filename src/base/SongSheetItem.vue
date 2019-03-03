@@ -44,12 +44,20 @@ export default {
     border-bottom: 1px solid #ddd;
     .title {
       padding: 6px 0 0;
+      line-height: 1.4;
     }
     .creator, .tag, .des {
       font-size: 12px;
     }
+    .tag {
+      display: inline-block;
+      padding: 2px 4px;
+      border-radius: 3px;
+      transform: scale(0.8);
+    }
     .creator {
       margin: 6px 0;
+      color: #999;
     }
     .info {
       height: 100%;

@@ -1,31 +1,6 @@
-# cloud-music
+### 云音乐
 
+用 Vue + Vue-router + Vuex + Axios 实现的网易云音乐播放器，功能包括歌单，歌手列表，歌曲榜单，搜索页，播放页。数据来源网易云音乐，使用 [网易云音乐API](https://binaryify.github.io/NeteaseCloudMusicApi/#/) 提供的接口。
 
-> netease cloud mousic
-
-## Build Setup
-
-``` bash
-# install dependencies
-npm install
-
-# serve with hot reload at localhost:8080
-npm run dev
-
-# build for production with minification
-npm run build
-
-# build for production and view the bundle analyzer report
-npm run build --report
-
-# run unit tests
-npm run unit
-
-# run e2e tests
-npm run e2e
-
-# run all tests
-npm test
-```
-
-For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+![](readme_img/img.png)
+![](readme_img/img2.png)

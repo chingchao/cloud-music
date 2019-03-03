@@ -26,18 +26,19 @@
     </mu-appbar> -->
     <div class="bg-theme color-white nav flex">
         <div>
-            <i class='icon-caidan iconfont active'></i>
+            <!-- <i class='icon-caidan iconfont active'></i> -->
         </div>
         <div class="nav-item flex">
-            <router-link to='/home'>
+            <!-- <router-link to='/home'>
                 <i class="iconfont icon-yinyue i-nav"></i>
-            </router-link>
-            <router-link to='/recommend'>
+            </router-link> -->
+            <!-- <router-link to='/recommend'>
                 <i class="iconfont icon-yinle-yuanshijituantubiao i-nav"></i>
-            </router-link>
-            <router-link to='/mv'>
+            </router-link> -->
+            <!-- <router-link to='/mv'>
                 <i class="iconfont icon-shipin i-nav"></i>
-            </router-link>
+            </router-link> -->
+            <p class="title">云音乐</p>
         </div>
         <div>
             <router-link to='/search'>
@@ -52,32 +53,35 @@ export default {
 }
 </script>
 <style lang='less' scoped>
-.nav {
-    height: 48px;
-    padding: 0 10px;
-    flex-shrink: 0;
-    width: 100%;
-    position: relative;
-    z-index: 1;
-    box-sizing: border-box;
-}
-.iconfont {
-  color: #d0d0d0;
-  font-size: 28px;
-}
-.nav-item {
-  line-height: 1;
-  justify-content: center;
-  flex-grow: 1;
-}
-.i-nav {
-  padding: 0 16px;
-}
-.router-link-active .iconfont,
-.active {
-  color: #fff;
-}
-.center-icon {
-  margin: 0 6px;
-}
+    .nav {
+        height: 48px;
+        padding: 0 10px;
+        flex-shrink: 0;
+        width: 100%;
+        position: relative;
+        z-index: 1;
+        box-sizing: border-box;
+    }
+    .iconfont {
+    color: #d0d0d0;
+    font-size: 28px;
+    }
+    .nav-item {
+    line-height: 1;
+    justify-content: center;
+    flex-grow: 1;
+    }
+    .i-nav {
+    padding: 0 16px;
+    }
+    .router-link-active .iconfont,
+    .active {
+    color: #fff;
+    }
+    .center-icon {
+    margin: 0 6px;
+    }
+    .title {
+        font-size: 20px;
+    }
 </style>
